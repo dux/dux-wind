@@ -1,0 +1,59 @@
+{
+  "name": "dux-wind",
+  "version": "0.1.0",
+  "description": "Real-time Tailwind-like CSS generator with pipe notation, shortcuts, and dynamic CSS injection",
+  "type": "module",
+  "main": "dist/dux-wind.js",
+  "exports": {
+    ".": {
+      "import": "./dist/dux-wind.js",
+      "require": "./dist/dux-wind.cjs"
+    },
+    "./config": {
+      "import": "./dist/dux-wind-config.js",
+      "require": "./dist/dux-wind-config.cjs"
+    }
+  },
+  "bin": {
+    "dux-wind": "./bin/server.js"
+  },
+  "files": [
+    "dist/",
+    "src/",
+    "bin/",
+    "example/",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "bun build src/dux-wind.js --outdir dist --format esm && bun build src/dux-wind.js --outdir dist --format cjs --outfile dist/dux-wind.cjs && bun build src/dux-wind-config.js --outdir dist --format esm && bun build src/dux-wind-config.js --outdir dist --format cjs --outfile dist/dux-wind-config.cjs",
+    "test": "bun test src/",
+    "start": "bun run bin/server.js",
+    "dev": "bun run --watch bin/server.js",
+    "pages": "echo 'GitHub Pages ready! Enable Pages in repo settings.' && echo 'Demo will be at: https://dux.github.io/dux-wind/'"
+  },
+  "keywords": [
+    "css",
+    "tailwind",
+    "utility-first",
+    "css-in-js",
+    "responsive",
+    "frontend",
+    "bun"
+  ],
+  "author": "Dux",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dux/dux-wind.git"
+  },
+  "homepage": "https://dux.github.io/dux-wind/",
+  "bugs": {
+    "url": "https://github.com/dux/dux-wind/issues"
+  },
+  "devDependencies": {
+    "jsdom": "^22.1.0"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  }
+}
