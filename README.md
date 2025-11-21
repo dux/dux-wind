@@ -20,12 +20,10 @@ Real-time Tailwind-like CSS generator with shortcuts, responsive utilities, and 
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="src/dux-wind.js"></script>
+    <script src="https://dux.github.io/dux-wind/src/dux-wind.js"></script>
     <script>
         // Default configuration auto-loads - just initialize!
-        document.addEventListener('DOMContentLoaded', () => {
-            DuxWind.init({ reset: true });
-        });
+        DuxWind.init({ reset: true });
     </script>
 </head>
 <body>
@@ -41,35 +39,31 @@ Real-time Tailwind-like CSS generator with shortcuts, responsive utilities, and 
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="src/dux-wind.js"></script>
+    <script src="https://dux.github.io/dux-wind/src/dux-wind.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Optional: Override default breakpoints
-            DuxWind.config.breakpoints = {
-                's': '(max-width: 480px)',    // Small mobile
-                'm': '(max-width: 768px)',    // Mobile
-                't': '(max-width: 1024px)',   // Tablet
-                'd': '(min-width: 1025px)'    // Desktop
-            };
-            
-            // Optional: Add custom shortcuts
-            DuxWind.config.shortcuts = {
-                'btn': 'px-4 py-2 rounded font-medium cursor-pointer',
-                'btn-primary': 'btn bg-blue-500 text-white hover:bg-blue-600',
-                'card': 'bg-white rounded border p-6 shadow-sm'
-            };
-            
-            DuxWind.init({ reset: true, debug: true });
-        });
+        // Optional: Override default breakpoints
+        DuxWind.config.breakpoints = {
+            's': '(max-width: 480px)',    // Small mobile
+            'm': '(max-width: 768px)',    // Mobile
+            't': '(max-width: 1024px)',   // Tablet
+            'd': '(min-width: 1025px)'    // Desktop
+        };
+
+        // Optional: Add custom shortcuts
+        DuxWind.shortcut('btn': 'px-4 py-2 rounded font-medium cursor-pointer');
+        DuxWind.shortcut('btn-primary': 'btn bg-blue-500 text-white hover:bg-blue-600');
+        DuxWind.shortcut('card': 'bg-white rounded border p-6 shadow-sm');
+
+        DuxWind.init({ reset: true, debug: true });
     </script>
 </head>
 <body>
     <div class="p-4 bg-blue-500 text-white rounded mb-4">
         Standard utilities work immediately
     </div>
-    
+
     <button class="btn-primary">Custom button shortcut</button>
-    
+
     <div class="card">
         <h2 class="text-lg font-bold mb-2">Card Component</h2>
         <p class="text-gray-600">Using custom shortcuts and responsive design</p>
@@ -85,7 +79,7 @@ Real-time Tailwind-like CSS generator with shortcuts, responsive utilities, and 
 **Automatic Configuration Loading:**
 DuxWind automatically loads a complete default configuration including:
 - 100+ CSS properties (padding, margin, width, height, colors, etc.)
-- 200+ keyword classes (flex, grid, rounded, shadows, animations, etc.) 
+- 200+ keyword classes (flex, grid, rounded, shadows, animations, etc.)
 - Mobile/desktop breakpoints
 - All pseudo-class support (hover, focus, active, first, last, etc.)
 
@@ -96,7 +90,7 @@ DuxWind.init({ reset: true });
 // ✅ With options
 DuxWind.init({
     debug: true,        // Enable debug mode (auto-detects dev ports)
-    reset: true,        // Apply CSS reset automatically  
+    reset: true,        // Apply CSS reset automatically
     clearCache: true    // Clear processed classes cache (default: true)
 });
 
@@ -391,7 +385,7 @@ DuxWind.config.shortcuts = {
             DuxWind
         </h1>
     </header>
-    
+
     <main class="p-4|8">
         <div class="grid grid-cols-1@m grid-cols-3@d gap-4|8">
             <div class="card">
@@ -416,16 +410,16 @@ DuxWind.config.shortcuts = {
     // Spacing
     'container': 'max-w-1200px mx-auto px-4|8',
     'section': 'py-12|20',
-    
+
     // Typography
     'h1': 'text-32|48px font-bold leading-tight',
     'h2': 'text-24|32px font-semibold leading-tight',
     'text-muted': 'text-gray-600',
-    
+
     // Components
     'card': 'bg-white rounded-lg border p-6 shadow-sm',
     'badge': 'px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm font-medium',
-    
+
     // Buttons
     'btn': 'px-4 py-2 rounded font-medium transition-all duration-200 cursor-pointer border',
     'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600',
@@ -467,7 +461,7 @@ DuxWind offers several unique features not available in Tailwind CSS:
 // Change configuration on-the-fly
 DuxWind.config.breakpoints = {
   's': '(max-width: 480px)',
-  'm': '(max-width: 768px)', 
+  'm': '(max-width: 768px)',
   'd': '(min-width: 769px)'
 };
 

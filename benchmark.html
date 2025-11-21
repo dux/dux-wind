@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DuxWind Performance Benchmark</title>
-    <script src="src/dux-wind.js"></script>
+    <script type="module" src="src/dux-wind.js"></script>
     <style>
         body { font-family: system-ui; margin: 2rem; }
         .benchmark { border: 1px solid #ccc; padding: 1rem; margin: 1rem 0; }
@@ -32,12 +32,32 @@
         <div id="memory-results" class="results"></div>
     </div>
 
-    <script>
+    <script type="module">
+        // Wait for DuxWind to be available
+        let DuxWind;
+        
+        // Check if DuxWind is available, wait if not
+        function waitForDuxWind() {
+            return new Promise((resolve) => {
+                function check() {
+                    if (window.DuxWind) {
+                        DuxWind = window.DuxWind;
+                        resolve();
+                    } else {
+                        setTimeout(check, 10);
+                    }
+                }
+                check();
+            });
+        }
+        
+        await waitForDuxWind();
+        
         DuxWind.resetCss();
         DuxWind.loadDefaultConfig();
         DuxWind.init({ debug: false });
 
-        function benchmarkGeneration() {
+        window.benchmarkGeneration = function() {
             const classes = [
                 'p-1', 'p-2', 'p-4', 'p-8', 'p-16',
                 'm-1', 'm-2', 'm-4', 'm-8', 'm-16',
@@ -76,7 +96,7 @@
             `;
         }
 
-        function benchmarkDOMProcessing() {
+        window.benchmarkDOMProcessing = function() {
             const container = document.createElement('div');
             document.body.appendChild(container);
             
@@ -121,7 +141,7 @@
             container.remove();
         }
 
-        function benchmarkMemory() {
+        window.benchmarkMemory = function() {
             if (!performance.memory) {
                 document.getElementById('memory-results').innerHTML = 
                     'Memory API not available in this browser';

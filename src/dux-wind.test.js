@@ -486,6 +486,40 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       // Expected CSS: @media (min-width: 1024px) { font-size: 18px }
       testClassWithOutput('d:text-lg', ['@media (min-width: 1024px)', 'font-size: 18px']);
     });
+
+    test('colon notation: p-10:20 → converts to pipe notation p-10|20', () => {
+      // Setup responsive breakpoints
+      DuxWind.config.breakpoints = {
+        'm': '(max-width: 768px)',
+        'd': '(min-width: 769px)'
+      };
+      
+      // Test: p-10:20 should convert to p-10|20 and expand to responsive classes
+      // Expected: m:p-10 and d:p-20
+      testClassWithOutput('m:p-10', ['@media (max-width: 768px)', 'padding: 40px']);
+      testClassWithOutput('d:p-20', ['@media (min-width: 769px)', 'padding: 80px']);
+      
+      // Test: Multiple colons p-5:10:15 (for 3 breakpoints)
+      DuxWind.config.breakpoints = {
+        's': '(max-width: 640px)',
+        'm': '(min-width: 641px) and (max-width: 768px)',
+        'l': '(min-width: 769px)'
+      };
+      
+      testClassWithOutput('s:p-5', ['@media (max-width: 640px)', 'padding: 20px']);
+      testClassWithOutput('m:p-10', ['@media (min-width: 641px) and (max-width: 768px)', 'padding: 40px']);
+      testClassWithOutput('l:p-15', ['@media (min-width: 769px)', 'padding: 60px']);
+      
+      // Test: Works with other properties like margin
+      DuxWind.config.breakpoints = {
+        'm': '(max-width: 768px)',
+        'd': '(min-width: 769px)'
+      };
+      
+      // m-8:16 → m:m-8 d:m-16
+      testClassWithOutput('m:m-8', ['@media (max-width: 768px)', 'margin: 32px']);
+      testClassWithOutput('d:m-16', ['@media (min-width: 769px)', 'margin: 64px']);
+    });
   });
 
   describe('CSS Override System: Explicit Classes Override Shortcut Classes', () => {
@@ -691,7 +725,7 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       expect(doc.length).toBeGreaterThan(100);
       expect(doc).toContain('DuxWind');
       expect(doc).toContain('<div'); // HTML content
-      expect(doc).toContain('CSS Generator'); // Description
+      expect(doc).toContain('Documentation'); // Description
     });
 
     test('config property: get/set operations', () => {

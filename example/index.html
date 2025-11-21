@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DuxWind - Real-time CSS Generator</title>
-    <script src="../src/dux-wind.js"></script>
+    <script type="module" src="../src/dux-wind.js"></script>
     <script>
         // ✨ DuxWind auto-loads with 100+ utilities, 200+ keywords, and responsive breakpoints!
         document.addEventListener('DOMContentLoaded', function() {
@@ -16,7 +16,7 @@
 
             // 🛠️ Optional: Add custom shortcuts (build on auto-loaded utilities)
             DuxWind.config.shortcuts = {
-                'btn': 'px-4 py-2 rounded font-medium transition-all duration-200 cursor-pointer border',
+                'btn': 'px-4 py-2 rounded font-medium cursor-pointer border',
                 'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600 hover:border-blue-600 active:bg-blue-700',
                 'btn-outline': 'btn bg-transparent text-blue-500 border-blue-500 hover:bg-blue-50 hover:border-blue-600 active:bg-blue-100 focus:ring-2',
                 'card': 'bg-white rounded-lg border p-6 shadow-sm',
@@ -32,7 +32,7 @@
             DuxWind.init({ debug: true, reset: true });
             
             console.log('🎉 DuxWind ready! Auto-loaded:', 
-                Object.keys(DuxWind.config.properties).length, 'properties,',
+                Object.keys(DuxWind.config.props).length, 'properties,',
                 Object.keys(DuxWind.config.keywords).length, 'keywords'
             );
         });
@@ -40,8 +40,9 @@
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
     <style>
-        * {
-            transition: all 0.2s ease-in;
+        /* Only animate specific properties, not layout changes */
+        button {
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
         }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -392,50 +393,15 @@
     <!-- Footer -->
     <footer class="bg-gray-50 border-t">
         <div class="container py-8">
-            <div class="flex flex-wrap justify-between items-center gap-6">
-                <div>
-                    <h3 class="font-semibold text-gray-800 mb-2">DuxWind</h3>
-                    <p class="text-gray-600 text-sm">Real-time Tailwind-like CSS generator</p>
-                </div>
-
-                <div class="flex flex-wrap gap-4">
-                    <a href="https://github.com/dux/dux-wind" target="_blank" rel="noopener"
-                       class="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                        Repository
-                    </a>
-
-                    <a href="https://github.com/dux/dux-wind/issues" target="_blank" rel="noopener"
-                       class="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Issues
-                    </a>
-
-                    <a href="https://github.com/dux/dux-wind/blob/main/LICENSE" target="_blank" rel="noopener"
-                       class="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
-                        </svg>
-                        License
-                    </a>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-200 mt-6 pt-6">
-                <div class="flex flex-wrap justify-between items-center gap-4">
-                    <p class="text-gray-500 text-sm">
-                        © 2024 DuxWind. Open source CSS generator.
-                    </p>
-                    <div class="flex items-center gap-4 text-sm text-gray-500">
-                        <span>Built with ❤️ and JavaScript</span>
-                        <span>•</span>
-                        <a href="https://github.com/dux/dux-wind/stargazers" target="_blank" rel="noopener"
-                           class="hover:text-yellow-600 transition-colors">⭐ Star on GitHub</a>
-                    </div>
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <p class="text-gray-500 text-sm">
+                    © 2024 DuxWind. Open source CSS generator.
+                </p>
+                <div class="flex items-center gap-4 text-sm text-gray-500">
+                    <span>Built with ❤️ and JavaScript</span>
+                    <span>•</span>
+                    <a href="https://github.com/dux/dux-wind/stargazers" target="_blank" rel="noopener"
+                       class="hover:text-yellow-600 transition-colors">⭐ Star on GitHub</a>
                 </div>
             </div>
         </div>
@@ -451,17 +417,49 @@
             // Show selected section
             document.getElementById(sectionId).style.display = 'block';
 
-            // Update button styles
-            const buttons = document.querySelectorAll('nav button');
-            buttons.forEach(btn => {
-                btn.className = btn.className.replace('btn-primary', 'btn-outline');
-            });
-
-            // Find and highlight the button for this section
-            const targetButton = document.querySelector(`button[onclick*="${sectionId}"]`);
-            if (targetButton) {
-                targetButton.className = targetButton.className.replace('btn-outline', 'btn-primary');
+            // Generate documentation when documentation section is shown
+            if (sectionId === 'documentation') {
+                const docContainer = document.getElementById('doc-content');
+                console.log('Documentation section shown');
+                console.log('DuxWind available:', !!window.DuxWind);
+                console.log('generateDoc available:', !!window.DuxWind?.generateDoc);
+                
+                if (docContainer && window.DuxWind && window.DuxWind.generateDoc) {
+                    // Only generate if not already generated
+                    if (!docContainer.innerHTML.trim()) {
+                        try {
+                            console.log('Generating documentation...');
+                            const docHTML = window.DuxWind.generateDoc();
+                            console.log('Documentation HTML length:', docHTML.length);
+                            docContainer.innerHTML = docHTML;
+                            console.log('✅ Documentation generated successfully');
+                            
+                        } catch (error) {
+                            console.error('Error generating documentation:', error);
+                            docContainer.innerHTML = '<div class="container"><p class="text-red-500">Documentation generation error: ' + error.message + '</p></div>';
+                        }
+                    }
+                } else {
+                    const errorMsg = !window.DuxWind ? 'DuxWind not available' : 'generateDoc function not available';
+                    console.error('Documentation generation failed:', errorMsg);
+                    docContainer.innerHTML = '<div class="container"><p class="text-red-500">Documentation generation failed: ' + errorMsg + '</p></div>';
+                }
             }
+
+            // Update button styles efficiently - batch DOM changes
+            requestAnimationFrame(() => {
+                const buttons = document.querySelectorAll('nav button');
+                buttons.forEach(btn => {
+                    const isTarget = btn.onclick && btn.onclick.toString().includes(sectionId);
+                    const newClass = isTarget ? 
+                        btn.className.replace('btn-outline', 'btn-primary') : 
+                        btn.className.replace('btn-primary', 'btn-outline');
+                    
+                    if (btn.className !== newClass) {
+                        btn.className = newClass;
+                    }
+                });
+            });
         }
 
         // Initialize page with intro section visible
@@ -469,13 +467,7 @@
             // Show intro section by default
             showSection('intro');
 
-            // Generate documentation when ready
-            setTimeout(() => {
-                const docContainer = document.getElementById('doc-content');
-                if (docContainer && window.DuxWind && window.DuxWind.generateDoc) {
-                    docContainer.innerHTML = DuxWind.generateDoc();
-                }
-            }, 1000);
+            // Documentation will be generated when section is shown
         });
     </script>
 </body>
