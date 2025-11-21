@@ -12,6 +12,8 @@ let debugMode = false;
 let bodyClassMode = false;
 let currentBodyClass = null;
 let resizeObserver = null;
+let visibilityObserver = null;
+const elementsWithVisiblePseudo = new WeakMap();
 
 // Configuration access
 export function getConfig() {
@@ -49,9 +51,18 @@ const processElement = safeWrapper(function(element) {
   }
   
   // Generate CSS for all processed classes
-  processedClassString.split(/\s+/).filter(Boolean).forEach(className => {
+  const processedClasses = processedClassString.split(/\s+/).filter(Boolean);
+  processedClasses.forEach(className => {
     processClassForCSS(className);
   });
+  
+  // Check if any classes use visible: pseudo-state
+  const hasVisiblePseudo = processedClasses.some(cls => cls.includes('visible:'));
+  if (hasVisiblePseudo) {
+    setupVisibilityObserver();
+    elementsWithVisiblePseudo.set(element, processedClasses.filter(cls => cls.includes('visible:')));
+    visibilityObserver.observe(element);
+  }
 }, 'processElement');
 
 
@@ -144,6 +155,12 @@ export function init(options = {}) {
   if (settings.body) {
     setupBodyClassManagement();
   }
+  
+  // Setup visibility observer for existing elements with visible: pseudo
+  const elementsWithVisible = document.querySelectorAll('[class*="visible:"]');
+  if (elementsWithVisible.length > 0) {
+    setupVisibilityObserver();
+  }
 }
 
 function parseInitOptions(options) {
@@ -174,6 +191,31 @@ function setupMutationObserver() {
     subtree: true,
     attributes: true,
     attributeFilter: ['class']
+  });
+}
+
+function setupVisibilityObserver() {
+  if (visibilityObserver) return;
+  
+  visibilityObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const element = entry.target;
+      const visibleClasses = elementsWithVisiblePseudo.get(element);
+      
+      if (!visibleClasses) return;
+      
+      if (entry.isIntersecting) {
+        // Element is visible - add the visible state
+        element.classList.add('dw-visible');
+      } else {
+        // Element is not visible - remove the visible state
+        element.classList.remove('dw-visible');
+      }
+    });
+  }, {
+    // Options for when to trigger
+    threshold: 0.7, // Trigger when 70% visible
+    rootMargin: '0px'
   });
 }
 

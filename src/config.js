@@ -11,13 +11,15 @@ export const CONSTANTS = {
   },
   SUPPORTED_PSEUDO_STATES: [
     'hover', 'focus', 'active', 'disabled', 'visited', 
-    'focus-within', 'focus-visible', 'first', 'last', 'odd', 'even'
+    'focus-within', 'focus-visible', 'first', 'last', 'odd', 'even',
+    'visible'
   ],
   PSEUDO_SELECTOR_MAPPING: {
     'first': 'first-child',
     'last': 'last-child', 
     'odd': 'nth-child(odd)',
-    'even': 'nth-child(even)'
+    'even': 'nth-child(even)',
+    'visible': '.dw-visible'  // Special handling for visibility state
   }
 };
 

@@ -438,7 +438,14 @@ function buildCSSSelector(className, modifiers) {
   modifiers.forEach(modifier => {
     // Use constants for pseudo-selector mapping
     const pseudoSelector = CONSTANTS.PSEUDO_SELECTOR_MAPPING[modifier] || modifier;
-    selector += `:${pseudoSelector}`;
+    
+    // Special handling for visible pseudo-state
+    if (modifier === 'visible') {
+      // For visible, we need to combine with .dw-visible class
+      selector += pseudoSelector;
+    } else {
+      selector += `:${pseudoSelector}`;
+    }
   });
   
   return selector;

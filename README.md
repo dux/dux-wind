@@ -29,6 +29,7 @@ DuxWind maintains compatibility with Tailwind's core concepts while adding conve
 - **🐛 Debug mode** - Track original classes during development
 - **🌊 Pipe notation** - Compact responsive syntax
 - **@ Alternative syntax** - Property-first breakpoint notation
+- **👁️ Scroll animations** - Built-in `visible:` pseudo-class for viewport-triggered effects
 
 ## Quick Start
 
@@ -125,7 +126,7 @@ DuxWind.loadDefaultConfig();
 - **100+ CSS Properties:** `p-4` (padding), `m-8` (margin), `w-full` (width), `text-lg` (font-size), `bg-blue-500` (background), etc.
 - **200+ Keyword Classes:** `flex`, `grid`, `rounded`, `shadow-lg`, `animate-spin`, `transition`, `cursor-pointer`, etc.
 - **Responsive Breakpoints:** `m:` (mobile), `d:` (desktop)
-- **All Pseudo-classes:** `hover:`, `focus:`, `active:`, `first:`, `last:`, `even:`, `odd:`, `disabled:`, etc.
+- **All Pseudo-classes:** `hover:`, `focus:`, `active:`, `first:`, `last:`, `even:`, `odd:`, `disabled:`, `visible:`, etc.
 - **Animations & Transitions:** `animate-spin`, `animate-pulse`, `duration-300`, `ease-in-out`
 - **Layout Systems:** Flexbox, CSS Grid, positioning, spacing utilities
 
@@ -299,6 +300,50 @@ DuxWind.config.shortcuts = {
 <!-- Responsive + states -->
 <button class="hover:bg-blue-600@d">  <!-- Hover only on desktop -->
 ```
+
+## Scroll-Triggered Animations (visible:)
+
+DuxWind includes a powerful `visible:` pseudo-class that triggers animations when elements enter the viewport:
+
+```html
+<!-- Fade in when visible -->
+<div class="visible:opacity-100 opacity-0 transition-all duration-700">
+    I fade in when scrolled into view!
+</div>
+
+<!-- Slide up and fade -->
+<div class="visible:translate-y-0 visible:opacity-100 translate-y-8 opacity-0 transition-all duration-700">
+    I slide up smoothly when visible!
+</div>
+
+<!-- Scale and rotate -->
+<div class="visible:scale-100 visible:rotate-0 scale-50 rotate-180 opacity-0 transition-all duration-1000">
+    Complex transformations on scroll!
+</div>
+
+<!-- Directional slides -->
+<div class="visible:translate-x-0 -translate-x-full opacity-0 transition-all duration-700">
+    Slide from left
+</div>
+<div class="visible:translate-x-0 translate-x-full opacity-0 transition-all duration-700">
+    Slide from right
+</div>
+
+<!-- Staggered animations with delays -->
+<div class="grid grid-cols-3 gap-4">
+    <div class="visible:opacity-100 opacity-0 transition-all duration-500 delay-100">Item 1</div>
+    <div class="visible:opacity-100 opacity-0 transition-all duration-500 delay-200">Item 2</div>
+    <div class="visible:opacity-100 opacity-0 transition-all duration-500 delay-300">Item 3</div>
+</div>
+```
+
+### How visible: works
+
+- **Intersection Observer**: Uses native browser API for performance
+- **70% threshold**: Triggers when 70% of element is visible
+- **Bidirectional**: Animations reverse when scrolling back up
+- **No JavaScript needed**: Just add classes, DuxWind handles the rest
+- **Combines with any utility**: Works with transforms, opacity, colors, etc.
 
 ## Debug Mode
 
@@ -864,12 +909,26 @@ DuxWind.init({ body: true });
 // <body class="mobile"> or <body class="desktop">
 ```
 
+**8. Scroll-Triggered Animations (visible:)**
+```html
+<!-- No JavaScript needed for scroll animations -->
+<div class="visible:scale-100 visible:opacity-100 scale-75 opacity-0 transition-all duration-700">
+  Animates when scrolled into view!
+</div>
+
+<!-- Complex reveal effects -->
+<div class="visible:translate-y-0 visible:rotate-0 translate-y-8 -rotate-3 opacity-0 transition-all duration-1000">
+  Slide, rotate, and fade in on scroll
+</div>
+```
+
 ## Browser Support
 
 DuxWind works in all modern browsers that support:
 - ES6+ JavaScript
 - CSS Custom Properties
 - MutationObserver API
+- IntersectionObserver API (for visible: pseudo-class)
 
 ## License
 
