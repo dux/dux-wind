@@ -1264,6 +1264,8 @@ function createDefaultKeywords() {
 
     // Ring utilities
     'ring-2': 'box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5)',
+    'ring-4': 'box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5)',
+    'ring-indigo-200': 'box-shadow: 0 0 0 3px rgba(199, 210, 254, 0.5)',
 
     // CSS Grid values
     'grid-cols-1': 'grid-template-columns: repeat(1, minmax(0, 1fr))',
@@ -1285,6 +1287,28 @@ function createDefaultKeywords() {
     'row-span-2': 'grid-row: span 2 / span 2',
     'row-span-3': 'grid-row: span 3 / span 3',
     'row-span-full': 'grid-row: 1 / -1',
+    
+    // Grid positioning
+    'col-start-1': 'grid-column-start: 1',
+    'col-start-2': 'grid-column-start: 2',
+    'col-start-3': 'grid-column-start: 3',
+    'col-start-4': 'grid-column-start: 4',
+    'col-start-5': 'grid-column-start: 5',
+    'col-start-6': 'grid-column-start: 6',
+    'col-end-1': 'grid-column-end: 1',
+    'col-end-2': 'grid-column-end: 2',
+    'col-end-3': 'grid-column-end: 3',
+    'col-end-4': 'grid-column-end: 4',
+    'col-end-5': 'grid-column-end: 5',
+    'col-end-6': 'grid-column-end: 6',
+    'row-start-1': 'grid-row-start: 1',
+    'row-start-2': 'grid-row-start: 2',
+    'row-start-3': 'grid-row-start: 3',
+    'row-start-4': 'grid-row-start: 4',
+    'row-end-1': 'grid-row-end: 1',
+    'row-end-2': 'grid-row-end: 2',
+    'row-end-3': 'grid-row-end: 3',
+    'row-end-4': 'grid-row-end: 4',
 
     // Animations
     'animate-none': 'animation: none',

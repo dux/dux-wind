@@ -48,7 +48,12 @@ export function clearMemoCache() {
  * @returns {string}
  */
 export function escapeSelector(className) {
-  return className.replace(/:/g, '\\:').replace(/\./g, '\\.').replace(/\//g, '\\/');
+  return className
+    .replace(/:/g, '\\:')
+    .replace(/\./g, '\\.')
+    .replace(/\//g, '\\/')
+    .replace(/\[/g, '\\[')
+    .replace(/\]/g, '\\]');
 }
 
 

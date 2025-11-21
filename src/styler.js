@@ -90,14 +90,17 @@ export function processClass(className) {
  * @returns {string}
  */
 function cleanClassName(className) {
-  // Handle bracket syntax: w-[200px] → w-200px, bg-[#ff0000] → bg-ff0000  
-  return className.replace(/\[([^\]]+)\]/g, (match, value) => {
-    // Keep px values and hex colors as-is, remove brackets
-    if (value.endsWith('px') || value.startsWith('#')) {
-      return value;
-    }
-    return value;
-  });
+  // Simple rule: only auto-convert number+unit values like p-12px, w-50vh, etc.
+  // Everything else must already have brackets to be valid
+  
+  // If already has brackets, keep as-is
+  if (className.includes('[') && className.includes(']')) {
+    return className;
+  }
+  
+  // Convert number followed by any string: property-NUMBER+STRING → property-[NUMBER+STRING]
+  // Matches: 12px, 50vh, 100%, 45deg, 300ms, etc.
+  return className.replace(/^([^-]+)-(\d+[a-zA-Z%]+)$/, '$1-[$2]');
 }
 
 /**
@@ -282,10 +285,43 @@ function tryParseNumeric(actualClass, className, modifiers, breakpoint) {
   if (!match) return null;
   
   const [, negative, property, value, unit] = match;
-  const cssValue = calculateNumericValue(property, value, unit, negative);
+  let cssValue = calculateNumericValue(property, value, unit, negative);
   const cssProperty = CONFIG.props[property];
   
   if (!cssProperty) return null;
+  
+  // Special handling for transform functions with numeric values
+  if (cssProperty === 'transform') {
+    switch (property) {
+      case 'scale':
+        // For scale, use the raw value (scale-105 = scale(1.05))
+        cssValue = `scale(${parseInt(value) / 100})`;
+        break;
+      case 'scale-x':
+        cssValue = `scaleX(${parseInt(value) / 100})`;
+        break;
+      case 'scale-y':
+        cssValue = `scaleY(${parseInt(value) / 100})`;
+        break;
+      case 'rotate':
+        // For rotate, use degrees (rotate-180 = rotate(180deg))
+        cssValue = `rotate(${parseInt(value)}deg)`;
+        break;
+      case 'translate-x':
+        cssValue = `translateX(${cssValue})`;
+        break;
+      case 'translate-y':
+        cssValue = `translateY(${cssValue})`;
+        break;
+      case 'skew-x':
+        cssValue = `skewX(${parseInt(value)}deg)`;
+        break;
+      case 'skew-y':
+        cssValue = `skewY(${parseInt(value)}deg)`;
+        break;
+    }
+  }
+  
   return buildCSSRule(className, cssProperty, cssValue, modifiers, breakpoint);
 }
 
@@ -301,11 +337,51 @@ function tryParseArbitrary(actualClass, className, modifiers, breakpoint) {
   const match = actualClass.match(/^([a-z-]+)-(.+)$/);
   if (!match) return null;
   
-  const [, property, value] = match;
+  const [, property, rawValue] = match;
   const cssProperty = CONFIG.props[property];
   
   if (!cssProperty) return null;
-  return buildCSSRule(className, cssProperty, value, modifiers, breakpoint);
+  
+  // Extract value from brackets if present: [1.05] → 1.05, [#ff0000] → #ff0000
+  const value = rawValue.startsWith('[') && rawValue.endsWith(']') 
+    ? rawValue.slice(1, -1)  // Remove brackets
+    : rawValue;
+  
+  // Special handling for transform functions
+  let cssValue = value;
+  if (cssProperty === 'transform') {
+    // Transform functions need to be wrapped properly
+    switch (property) {
+      case 'scale':
+        cssValue = `scale(${value})`;
+        break;
+      case 'scale-x':
+        cssValue = `scaleX(${value})`;
+        break;
+      case 'scale-y':
+        cssValue = `scaleY(${value})`;
+        break;
+      case 'rotate':
+        cssValue = `rotate(${value})`;
+        break;
+      case 'translate-x':
+        cssValue = `translateX(${value})`;
+        break;
+      case 'translate-y':
+        cssValue = `translateY(${value})`;
+        break;
+      case 'skew-x':
+        cssValue = `skewX(${value})`;
+        break;
+      case 'skew-y':
+        cssValue = `skewY(${value})`;
+        break;
+      default:
+        cssValue = value;
+    }
+  }
+  
+  return buildCSSRule(className, cssProperty, cssValue, modifiers, breakpoint);
 }
 
 /**

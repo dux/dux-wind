@@ -159,7 +159,7 @@ export function init(options = {}) {
 function parseInitOptions(options) {
   return {
     debug: options.debug !== undefined ? options.debug : (typeof window !== 'undefined' && window.location.port > 2000),
-    reset: options.reset !== undefined ? options.reset : false,
+    reset: options.reset !== undefined ? options.reset : true,
     body: options.body !== undefined ? options.body : false,
     clearCache: true,
     ...options
