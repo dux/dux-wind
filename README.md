@@ -16,20 +16,29 @@ DuxWind was created to bridge the gap between Tailwind CSS's powerful utility-fi
 - **Built-in shortcuts system** - Create reusable component classes without additional tooling
 - **Complete solution** - CSS reset, utilities, and animations included out of the box
 
-DuxWind maintains compatibility with Tailwind's core concepts while adding conveniences that make utility-first CSS more accessible to developers at every level.
+DuxWind maintains full compatibility with Tailwind's core concepts while adding conveniences that make utility-first CSS more accessible to developers at every level—meaning existing Tailwind knowledge (and almost every class name) works out of the box.
+
+### Compatible + better than stock Tailwind
+
+- **Drop-in parity:** Core utilities, pseudo-classes, and responsive prefixes match Tailwind one-to-one—no mental remapping.
+- **Precise container queries:** `min-` / `max-` inline rules let each component respond to its own width, powered by per-node ResizeObservers and automatic cleanup.
+- **Visibility-powered motion:** The built-in `visible:` pseudo-class toggles transforms, opacity, or anything else as elements enter the viewport—no custom JS required.
+- **Packed responsive rules:** Pipe (`p-10|20`) and property-first (`text-lg@m`) syntaxes compress three breakpoints into one class token for rapid authoring.
+- **Shortcut composer:** Declare component primitives such as `btn`, `badge`, or `chip` directly in JavaScript and reference them just like Tailwind utilities.
 
 ## Features
 
 - **🚀 Real-time CSS generation** - Styles are generated as you use classes
-- **🎯 Near 100% Tailwind compatibility** - Drop-in replacement for most Tailwind classes
+- **🎯 100% Tailwind compatibility** - Drop-in replacement for the utility, pseudo, and responsive syntax you already know
 - **📱 Responsive utilities** - Multiple breakpoint syntaxes
 - **⚡ Custom shortcuts** - Define reusable class combinations
 - **🎨 Arbitrary values** - Use any CSS value with bracket notation
 - **🔧 Configurable** - Customize properties, breakpoints, and keywords
 - **🐛 Debug mode** - Track original classes during development
-- **🌊 Pipe notation** - Compact responsive syntax
-- **@ Alternative syntax** - Property-first breakpoint notation
-- **👁️ Scroll animations** - Built-in `visible:` pseudo-class for viewport-triggered effects
+- **🌊 Pipe notation** - Compact responsive syntax (`p-10|20`) that maps to your breakpoint order
+- **@ Alternative syntax** - Property-first breakpoint notation (`text-lg@m text-xl@d`)
+- **👁️ Scroll animations** - Built-in `visible:` pseudo-class for viewport-triggered effects without extra JS
+- **📦 Inline container queries** - `min-`/`max-` classes toggle utilities by element width (per-node ResizeObserver for precise control)
 
 ## Quick Start
 
@@ -197,6 +206,25 @@ DuxWind supports multiple syntaxes for responsive design:
     Padding: 16px mobile, 32px desktop
 </div>
 ```
+
+### Inline Container Queries (`min-XXX` / `max-XXX`)
+
+Need container-style logic without waiting for browser support? Use inline classes that observe each element's rendered width and toggle utility classes accordingly.
+
+```html
+<div class="flex gap-4 max-360:flex-col min-361:flex-row">
+    <div class="card flex-1">Primary content</div>
+    <div class="card flex-1">Secondary content</div>
+</div>
+```
+
+**Key details:**
+- Syntax follows `max-<pixels>:<class>` or `min-<pixels>:<class>` (px units only; omit `-w-`).
+- The payload must be a single class token (e.g., `flex-col`, `gap-4`, `d:text-lg`).
+- DuxWind attaches a `ResizeObserver` per element, adds the payload class while the condition is true, and removes it once the condition flips or the node leaves the DOM.
+- If `ResizeObserver` is unavailable, DuxWind logs a warning and simply ignores the inline container classes (your layout still renders normally).
+
+This approach gives you container-query ergonomics directly in markup, perfect for cards, dashboard widgets, or any component that rearranges itself based on its own width rather than the viewport.
 
 ## Arbitrary Values
 

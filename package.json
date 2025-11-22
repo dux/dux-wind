@@ -1,6 +1,6 @@
 {
   "name": "duxwind",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Real-time Tailwind-like CSS generator with pipe notation, shortcuts, and dynamic CSS injection",
   "type": "module",
   "main": "dist/duxwind.js",

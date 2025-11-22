@@ -3,6 +3,7 @@ import { CONFIG, createDefaultConfig } from './config.js';
 import { processClass, expandClass } from './styler.js';
 import { addShortcut, isShortcut } from './shortcuts.js';
 import { debounce, safeWrapper } from './utils.js';
+import { splitContainerQueryClasses, updateContainerQueries, cleanupContainerQueriesForTree } from './container-query.js';
 import { generateDoc } from './gen-doc.js';
 
 // State management - use CONFIG singleton
@@ -52,16 +53,24 @@ const processElement = safeWrapper(function(element) {
   }
 
   // Generate CSS for all processed classes
-  const processedClasses = processedClassString.split(/\s+/).filter(Boolean);
-  processedClasses.forEach(className => {
+  const allClasses = processedClassString.split(/\s+/).filter(Boolean);
+  const { regularClasses, containerQueries } = splitContainerQueryClasses(allClasses);
+
+  regularClasses.forEach(className => {
     processClassForCSS(className);
   });
 
+  if (containerQueries.length) {
+    containerQueries.forEach(query => processClassForCSS(query.payload));
+  }
+
+  updateContainerQueries(element, containerQueries);
+
   // Check if any classes use visible: pseudo-state
-  const hasVisiblePseudo = processedClasses.some(cls => cls.includes('visible:'));
+  const hasVisiblePseudo = regularClasses.some(cls => cls.includes('visible:'));
   if (hasVisiblePseudo) {
     setupVisibilityObserver();
-    elementsWithVisiblePseudo.set(element, processedClasses.filter(cls => cls.includes('visible:')));
+    elementsWithVisiblePseudo.set(element, regularClasses.filter(cls => cls.includes('visible:')));
     visibilityObserver.observe(element);
   }
 }, 'processElement');
@@ -234,6 +243,10 @@ function setupMutationObserver() {
     mutations.forEach(mutation => {
       mutation.addedNodes.forEach(node => {
         processNodeTree(node);
+      });
+
+      mutation.removedNodes.forEach(node => {
+        cleanupContainerQueriesForTree(node);
       });
 
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {

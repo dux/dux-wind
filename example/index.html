@@ -13,21 +13,31 @@
         DuxWind.init({
             debug: true,
             breakpoints: {
-                'm': '(max-width: 800px)',    // Mobile: up to tablet
-                'd': '(min-width: 801px)'     // Desktop: tablet and up
+                'm': '(max-width: 640px)',                        // Mobile: phones and small tablets
+                't': '(min-width: 641px) and (max-width: 1023px)', // Tablet / small laptop window
+                'd': '(min-width: 1024px)'                         // Desktop and large screens
             }
         });
 
         // 🛠️ Optional: Add custom shortcuts (build on auto-loaded utilities)
         DuxWind.shortcut({
-            'btn': 'px-4 py-2 rounded font-medium cursor-pointer border',
-            'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600 hover:border-blue-600 active:bg-blue-700',
-            'btn-outline': 'btn bg-transparent text-blue-500 border-blue-500 hover:bg-blue-50 hover:border-blue-600 active:bg-blue-100 focus:ring-2',
-            'card': 'bg-white rounded-lg border p-6 shadow-sm',
+            'btn': 'px-4 py-2 rounded-xl font-medium cursor-pointer border border-transparent transition-colors duration-200 shadow-sm shadow-black/5',
+            'btn-primary': 'btn bg-blue-600 text-white border-blue-600 hover:bg-blue-500 hover:border-blue-500 active:bg-blue-700 focus:ring-4 focus:ring-blue-200',
+            'btn-outline': 'btn bg-white text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-400 active:bg-blue-100 focus:ring-4 focus:ring-blue-100',
+            'btn-ghost': 'btn bg-transparent text-gray-700 border-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200',
+            'btn-success': 'btn bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-400 hover:border-emerald-400 active:bg-emerald-600 focus:ring-4 focus:ring-emerald-200',
+            'btn-danger': 'btn bg-rose-500 text-white border-rose-500 hover:bg-rose-400 hover:border-rose-400 active:bg-rose-600 focus:ring-4 focus:ring-rose-200',
+            'btn-soft': 'btn bg-blue-50 text-blue-700 border-blue-100 hover:bg-blue-100 focus:ring-4 focus:ring-blue-100',
+            'badge': 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-widest',
+            'badge-success': 'badge bg-emerald-100 text-emerald-700',
+            'badge-warning': 'badge bg-amber-100 text-amber-700',
+            'chip': 'inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm font-medium border border-transparent',
+            'chip-check': 'chip bg-blue-50 text-blue-700 border-blue-200',
+            'card': 'bg-white rounded-2xl border border-gray-200 p-6 shadow-md shadow-gray-200/80 space-y-4',
             'center': 'flex items-center justify-center',
             'full-center': 'w-full h-full center',
             'container': 'max-w-[1200px] mx-auto px-4',
-            'section': 'mb-12 p-6 bg-white rounded-lg border',
+            'section': 'mb-12 p-6 bg-white rounded-3xl border border-gray-200 shadow-sm shadow-gray-200/50 space-y-6',
             'h1': 'font-bold m:text-24px d:text-36px leading-tight',
             'h2': 'font-semibold m:text-20px d:text-24px leading-tight',
         })
@@ -84,6 +94,7 @@
                 <button onclick="showSection('typography')" class="btn-outline">Typography</button>
                 <button onclick="showSection('colors')" class="btn-outline">Colors</button>
                 <button onclick="showSection('responsive')" class="btn-outline">Responsive</button>
+                <button onclick="showSection('container-queries')" class="btn-outline">Container Queries</button>
                 <button onclick="showSection('flex')" class="btn-outline">Flexbox</button>
                 <button onclick="showSection('grid')" class="btn-outline">Grid</button>
                 <button onclick="showSection('borders')" class="btn-outline">Borders</button>
@@ -100,7 +111,7 @@
     </header>
 
     <main class="py-8 flex-1">
-        <div class="container">
+        <div class="container space-y-10">
 
         <!-- Introduction Section - Default Visible -->
         <section id="intro" class="section mb-8" style="display: block;">
@@ -139,6 +150,24 @@
                     Use the navigation above to explore different feature categories. Each section demonstrates input classes and their generated CSS output.
                 </p>
             </div>
+
+            <div class="grid m:grid-cols-1 d:grid-cols-3 gap-4 mt-8">
+                <div class="bg-white border border-gray-200 rounded-3xl p-5 shadow-sm space-y-2">
+                    <p class="text-xs font-semibold tracking-[0.2em] text-gray-500 uppercase">Drop-in Ready</p>
+                    <h3 class="font-semibold text-gray-900 text-lg">100% Tailwind compatible</h3>
+                    <p class="text-sm text-gray-600">Ship the same class names you already know—utilities, pseudo selectors, and responsive prefixes behave exactly like Tailwind.</p>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-3xl p-5 shadow-sm space-y-2">
+                    <p class="text-xs font-semibold tracking-[0.2em] text-gray-500 uppercase">Precision Extras</p>
+                    <h3 class="font-semibold text-gray-900 text-lg">Inline container queries</h3>
+                    <p class="text-sm text-gray-600">Use `min-` / `max-` breakpoints per component—no media file hopping, powered by ResizeObserver cleanup.</p>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-3xl p-5 shadow-sm space-y-2">
+                    <p class="text-xs font-semibold tracking-[0.2em] text-gray-500 uppercase">Expressive Syntax</p>
+                    <h3 class="font-semibold text-gray-900 text-lg">Packed rules & visibility</h3>
+                    <p class="text-sm text-gray-600">Mix `p-10|20`, property-first `text-lg@m`, and `visible:` scroll effects for faster authoring than stock Tailwind.</p>
+                </div>
+            </div>
         </section>
 
         <!-- Button Shortcuts Section -->
@@ -148,17 +177,79 @@
                 <li>Shortcuts are generated as new classes</li>
                 <li>You can use nested shortcuts, notice <code>btn</code> inside <code>btn-primary</code></li>
             </ul>
-            <div class="flex flex-wrap gap-4 mb-6">
-                <button class="btn">Base Button</button>
-                <button class="btn-primary">Primary Button</button>
-                <button class="btn-outline">Outline Button</button>
+            <div class="flex flex-wrap gap-6 mb-8">
+                <div class="flex flex-col gap-2 min-w-[180px]">
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-900 text-white text-[11px] font-semibold uppercase tracking-[0.2em]">Base</span>
+                    <button class="btn w-full">Base Button</button>
+                    <p class="text-xs text-gray-500">Neutral palette + soft shadow baked into <code>btn</code>.</p>
+                </div>
+                <div class="flex flex-col gap-2 min-w-[180px]">
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-600/10 text-blue-700 text-[11px] font-semibold uppercase tracking-[0.2em]">Primary</span>
+                    <button class="btn-primary w-full">Primary Button</button>
+                    <p class="text-xs text-gray-500">Adds brand color, hover/active states, and focus ring.</p>
+                </div>
+                <div class="flex flex-col gap-2 min-w-[180px]">
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[11px] font-semibold uppercase tracking-[0.2em]">Outline</span>
+                    <button class="btn-outline w-full">Outline Button</button>
+                    <p class="text-xs text-gray-500">Transparent background with subtle border accents.</p>
+                </div>
             </div>
+
+            <div class="grid gap-6 m:grid-cols-1 d:grid-cols-2 mb-6">
+                <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4">
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Contextual Buttons</h3>
+                        <p class="text-sm text-gray-600">Every variant reuses the `btn` shortcut for spacing, radius, and transitions.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <button class="btn-success">Success</button>
+                        <button class="btn-danger">Destructive</button>
+                        <button class="btn-soft">Soft</button>
+                        <button class="btn-ghost">Ghost</button>
+                    </div>
+                    <div class="text-xs text-gray-500 bg-gray-50 border border-dashed border-gray-200 rounded-lg p-3">
+                        <code>btn-success → btn + emerald colors<br>btn-danger → btn + rose colors</code>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4">
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Badges & Chips</h3>
+                        <p class="text-sm text-gray-600">Shortcuts can describe non-buttons too—wrap text, icons, or counters.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3 items-center">
+                        <span class="badge-success">Launched</span>
+                        <span class="badge-warning">Beta</span>
+                        <span class="chip">
+                            <span class="w-5 h-5 rounded-full bg-gray-200 center text-[10px] font-semibold text-gray-600">AI</span>
+                            Playground Access
+                        </span>
+                        <span class="chip-check">
+                            <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 center text-xs font-semibold">✓</span>
+                            Autosave Enabled
+                        </span>
+                    </div>
+                    <div class="text-xs text-gray-500 bg-gray-50 border border-dashed border-gray-200 rounded-lg p-3">
+                        <code>chip = pill layout<br>chip-check adds a blue outline + icon slot</code>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-gray-100 p-4 rounded">
                 <h3 class="font-semibold mb-2">Shortcut Definitions:</h3>
                 <ul class="text-sm font-mono space-y-1">
                     <li><strong>btn:</strong> px-4 py-2 rounded font-medium transition-all duration-200 cursor-pointer border</li>
                     <li><strong>btn-primary:</strong> btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600 hover:border-blue-600 active:bg-blue-700</li>
                     <li><strong>btn-outline:</strong> btn bg-transparent text-blue-500 border-blue-500 hover:bg-blue-50 active:bg-blue-100</li>
+                    <li><strong>btn-success:</strong> btn bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-400 active:bg-emerald-600</li>
+                    <li><strong>btn-danger:</strong> btn bg-rose-500 text-white border-rose-500 hover:bg-rose-400 active:bg-rose-600</li>
+                    <li><strong>btn-soft:</strong> btn bg-blue-50 text-blue-700 border-blue-100 hover:bg-blue-100</li>
+                    <li><strong>btn-ghost:</strong> btn bg-transparent border-transparent text-gray-700 hover:bg-gray-100</li>
+                    <li><strong>badge:</strong> inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase</li>
+                    <li><strong>badge-success:</strong> badge bg-emerald-100 text-emerald-700</li>
+                    <li><strong>badge-warning:</strong> badge bg-amber-100 text-amber-700</li>
+                    <li><strong>chip:</strong> inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm</li>
+                    <li><strong>chip-check:</strong> chip bg-blue-50 text-blue-700 border border-blue-200</li>
                     <li><strong>h1:</strong> font-bold m:text-24px d:text-36px leading-tight</li>
                     <li><strong>h2:</strong> font-semibold m:text-20px d:text-24px leading-tight</li>
                 </ul>
@@ -535,6 +626,53 @@
                 </div>
 
                 <div class="card">
+                    <h3 class="font-semibold mb-2">Responsive Card Grid (8 Items)</h3>
+                    <p class="text-sm text-gray-600 mb-4">Uses <code>m:grid-cols-1 t:grid-cols-2 d:grid-cols-4</code> so cards flow naturally with a roomy 20px gap.</p>
+                    <div class="grid gap-5 m:grid-cols-1 t:grid-cols-2 d:grid-cols-4">
+                        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 shadow-sm">
+                            <p class="text-xs uppercase tracking-wide text-blue-500 mb-1">Card 1</p>
+                            <p class="font-semibold text-gray-900">Realtime build</p>
+                            <p class="text-sm text-gray-600">Updates instantly with zero tooling.</p>
+                        </div>
+                        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 shadow-sm">
+                            <p class="text-xs uppercase tracking-wide text-indigo-500 mb-1">Card 2</p>
+                            <p class="font-semibold text-gray-900">Inline queries</p>
+                            <p class="text-sm text-gray-600">Use min/max classes per container.</p>
+                        </div>
+                        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 shadow-sm">
+                            <p class="text-xs uppercase tracking-wide text-emerald-500 mb-1">Card 3</p>
+                            <p class="font-semibold text-gray-900">Shortcuts</p>
+                            <p class="text-sm text-gray-600">Compose reusable class bundles.</p>
+                        </div>
+                        <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 shadow-sm">
+                            <p class="text-xs uppercase tracking-wide text-amber-500 mb-1">Card 4</p>
+                            <p class="font-semibold text-gray-900">Pipe notation</p>
+                            <p class="text-sm text-gray-600">Compact responsive syntax.</p>
+                        </div>
+                        <div class="bg-fuchsia-50 border border-fuchsia-100 rounded-xl p-4 shadow-sm">
+                            <p class="text-xs uppercase tracking-wide text-fuchsia-500 mb-1">Card 5</p>
+                            <p class="font-semibold text-gray-900">@ notation</p>
+                            <p class="text-sm text-gray-600">Property-first responsive format.</p>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 shadow-sm">
+                            <p class="text-xs uppercase tracking-wide text-slate-500 mb-1">Card 6</p>
+                            <p class="font-semibold text-gray-900">Animations</p>
+                            <p class="text-sm text-gray-600">Built-in visible: scroll effects.</p>
+                        </div>
+                        <div class="bg-cyan-50 border border-cyan-100 rounded-xl p-4 shadow-sm">
+                            <p class="text-xs uppercase tracking-wide text-cyan-500 mb-1">Card 7</p>
+                            <p class="font-semibold text-gray-900">Docs</p>
+                            <p class="text-sm text-gray-600">Generate docs straight in the app.</p>
+                        </div>
+                        <div class="bg-rose-50 border border-rose-100 rounded-xl p-4 shadow-sm">
+                            <p class="text-xs uppercase tracking-wide text-rose-500 mb-1">Card 8</p>
+                            <p class="font-semibold text-gray-900">Playground</p>
+                            <p class="text-sm text-gray-600">Experiment with any class instantly.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
                     <h3 class="font-semibold mb-4">Auto-Sizing Grids</h3>
                     <div class="space-y-6">
                         <div>
@@ -843,6 +981,119 @@
                     <div class="p-4 m:bg-red-100 d:bg-blue-100 rounded">
                         <p>Red on mobile, Blue on desktop</p>
                         <code class="text-sm">m:bg-red-100 d:bg-blue-100</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Container Queries Section -->
+        <section id="container-queries" class="section" style="display: none;">
+            <h2 class="h2 mb-6">Inline Container Queries</h2>
+            <div class="space-y-6">
+                <div class="card">
+                    <p class="text-gray-600 mb-4">
+                        Toggle real utility classes based on an element's own width using `min-` / `max-` syntax.
+                        Resize the panel below to watch `max-640:flex-col` and `min-900:flex-row` swap layouts with a generous buffer between breakpoints.
+                    </p>
+                    <div class="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-4">
+                        <label for="cq-slider" class="text-sm font-medium text-gray-700 flex items-center gap-2">
+                            Container width
+                            <span id="cq-width" class="text-blue-600 font-semibold">900px</span>
+                        </label>
+                        <input id="cq-slider" type="range" min="320" max="1200" value="900" class="w-full mt-2">
+                        <div id="cq-preview" class="mt-4 flex flex-col gap-4 flex-wrap items-stretch transition-all duration-200 max-640:flex-col min-900:flex-row" style="width: 900px;">
+                            <div class="flex-1 bg-white border rounded-lg p-4 shadow-sm">
+                                <h3 class="font-semibold mb-2">Primary Card</h3>
+                                <p class="text-gray-600 text-sm">Stacks vertically below 640px, flips to a row once the container hits 900px.</p>
+                            </div>
+                            <div class="flex-1 bg-blue-50 border border-blue-100 rounded-lg p-4 shadow-sm">
+                                <h3 class="font-semibold text-blue-700 mb-2">Secondary Card</h3>
+                                <ul class="text-sm text-blue-700 space-y-1">
+                                    <li>max-640:flex-col</li>
+                                    <li>min-900:flex-row</li>
+                                    <li>Resize to see it swap</li>
+                                </ul>
+                            </div>
+                            <div class="flex-1 bg-emerald-50 border border-emerald-100 rounded-lg p-4 shadow-sm">
+                                <h3 class="font-semibold text-emerald-800 mb-2">Tertiary Card</h3>
+                                <p class="text-emerald-700 text-sm">Add as many cards as you like—layout keeps adapting.</p>
+                            </div>
+                            <div class="flex-1 bg-amber-50 border border-amber-100 rounded-lg p-4 shadow-sm">
+                                <h3 class="font-semibold text-amber-800 mb-2">Insights</h3>
+                                <p class="text-amber-700 text-sm">Shows the same inline container query behavior.</p>
+                            </div>
+                            <div class="flex-1 bg-slate-50 border border-slate-200 rounded-lg p-4 shadow-sm">
+                                <h3 class="font-semibold text-slate-900 mb-2">Activity</h3>
+                                <p class="text-slate-600 text-sm">Perfect for dashboards or widget stacks.</p>
+                            </div>
+                            <div class="flex-1 bg-fuchsia-50 border border-fuchsia-100 rounded-lg p-4 shadow-sm">
+                                <h3 class="font-semibold text-fuchsia-800 mb-2">Usage</h3>
+                                <p class="text-fuchsia-700 text-sm">Keeps the row layout whenever there’s room.</p>
+                            </div>
+                            <div class="flex-1 bg-cyan-50 border border-cyan-100 rounded-lg p-4 shadow-sm">
+                                <h3 class="font-semibold text-cyan-800 mb-2">Status</h3>
+                                <p class="text-cyan-700 text-sm">Gracefully collapses into a column on narrow widths.</p>
+                            </div>
+                        </div>
+                        <code class="text-xs bg-white border rounded px-2 py-1 inline-block mt-3">class="max-640:flex-col min-900:flex-row"</code>
+                    </div>
+                </div>
+
+                <div class="grid gap-6 m:grid-cols-1 d:grid-cols-2">
+                    <div class="card">
+                        <h4 class="font-semibold text-gray-800 mb-3">Showcase Gallery</h4>
+                        <p class="text-sm text-gray-600 mb-4">`max-480:flex-col` collapses the media cards while `min-481:flex-row` keeps them aligned.</p>
+                        <div class="bg-white border rounded-xl p-4 space-y-4">
+                            <div class="flex gap-4 max-480:flex-col min-481:flex-row">
+                                <div class="flex-1 bg-indigo-50 border border-indigo-100 rounded-lg p-4">
+                                    <h5 class="font-semibold text-indigo-900 mb-1">Live Metrics</h5>
+                                    <p class="text-indigo-800 text-sm">max-480:flex-col min-481:flex-row</p>
+                                </div>
+                                <div class="flex-1 bg-slate-50 border border-slate-100 rounded-lg p-4">
+                                    <h5 class="font-semibold text-slate-900 mb-1">Deploys</h5>
+                                    <p class="text-slate-700 text-sm">Stacks when container shrinks.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 max-480:flex-col min-481:flex-row">
+                                <div class="flex-1 bg-emerald-50 border border-emerald-100 rounded-lg p-4">
+                                    <h5 class="font-semibold text-emerald-900 mb-1">Shortcuts</h5>
+                                    <p class="text-emerald-700 text-sm">Inline queries = instant container logic.</p>
+                                </div>
+                                <div class="flex-1 bg-amber-50 border border-amber-100 rounded-lg p-4">
+                                    <h5 class="font-semibold text-amber-900 mb-1">Themes</h5>
+                                    <p class="text-amber-700 text-sm">Swap layout without media queries.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4 class="font-semibold text-gray-800 mb-3">Stats Stack</h4>
+                        <p class="text-sm text-gray-600 mb-4">`max-420:grid-cols-1` vs `min-421:grid-cols-2` gives responsive cards inside their own container.</p>
+                        <div class="border border-gray-200 rounded-2xl p-4 bg-gray-50">
+                            <div class="grid gap-4 max-420:grid-cols-1 min-421:grid-cols-2">
+                                <div class="bg-white rounded-xl shadow-sm p-4">
+                                    <p class="text-xs uppercase tracking-widest text-gray-500">Build Time</p>
+                                    <div class="text-2xl font-bold text-gray-900">420ms</div>
+                                    <p class="text-green-500 text-xs font-semibold mt-1">min-421:grid-cols-2</p>
+                                </div>
+                                <div class="bg-white rounded-xl shadow-sm p-4">
+                                    <p class="text-xs uppercase tracking-widest text-gray-500">Bundles</p>
+                                    <div class="text-2xl font-bold text-gray-900">0</div>
+                                    <p class="text-blue-500 text-xs font-semibold mt-1">max-420:grid-cols-1</p>
+                                </div>
+                                <div class="bg-white rounded-xl shadow-sm p-4">
+                                    <p class="text-xs uppercase tracking-widest text-gray-500">Components</p>
+                                    <div class="text-2xl font-bold text-gray-900">248</div>
+                                    <p class="text-purple-500 text-xs font-semibold mt-1">Layout adapts per card.</p>
+                                </div>
+                                <div class="bg-white rounded-xl shadow-sm p-4">
+                                    <p class="text-xs uppercase tracking-widest text-gray-500">Downtime</p>
+                                    <div class="text-2xl font-bold text-gray-900">0.1%</div>
+                                    <p class="text-rose-500 text-xs font-semibold mt-1">Pure container rules.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1452,6 +1703,36 @@
             <h2 class="h2 mb-6">Real-World Components</h2>
             <div class="space-y-8">
                 <div class="card">
+                    <h3 class="font-semibold mb-4">Responsive Navigation</h3>
+                    <nav class="bg-white border border-gray-200 rounded-2xl shadow-sm">
+                        <div class="p-4 flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-blue-100 text-blue-700 font-bold rounded-full center">DW</div>
+                                <div>
+                                    <p class="font-semibold text-gray-900 leading-tight">DuxWind</p>
+                                    <p class="text-xs text-gray-500">Utility-first in any context</p>
+                                </div>
+                            </div>
+                            <button class="m:flex d:hidden px-3 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100 transition">Menu</button>
+                            <div class="hidden d:flex items-center gap-6 text-sm font-medium text-gray-600">
+                                <a class="hover:text-gray-900 transition" href="#">Features</a>
+                                <a class="hover:text-gray-900 transition" href="#">Pricing</a>
+                                <a class="hover:text-gray-900 transition" href="#">Docs</a>
+                                <a class="hover:text-gray-900 transition" href="#">Playground</a>
+                                <button class="btn-primary text-sm px-4 py-2">Launch Demo</button>
+                            </div>
+                        </div>
+                        <div class="m:block d:hidden border-t border-gray-100 px-4 py-3 space-y-2 text-sm text-gray-600">
+                            <a class="block hover:text-gray-900" href="#">Features</a>
+                            <a class="block hover:text-gray-900" href="#">Pricing</a>
+                            <a class="block hover:text-gray-900" href="#">Docs</a>
+                            <a class="block hover:text-gray-900" href="#">Playground</a>
+                            <button class="btn-primary w-full text-sm mt-2">Launch Demo</button>
+                        </div>
+                    </nav>
+                </div>
+
+                <div class="card">
                     <h3 class="font-semibold mb-4">Product Card</h3>
                     <div class="max-w-sm mx-auto bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 p-6 transform hover:-translate-y-1">
                         <div class="w-full h-48 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center text-white font-semibold">
@@ -1466,6 +1747,72 @@
                             <button class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 focus:ring-4 focus:ring-blue-200">
                                 Buy Now
                             </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Pricing Plans</h3>
+                    <div class="grid gap-6 m:grid-cols-1 d:grid-cols-3">
+                        <div class="border border-gray-200 rounded-2xl p-6 bg-white shadow-sm flex flex-col h-full">
+                            <p class="text-sm font-semibold text-gray-500 mb-1">Starter</p>
+                            <h4 class="text-3xl font-bold text-gray-900 mb-2">Free</h4>
+                            <p class="text-gray-600 text-sm mb-4">Perfect for tinkering and small demos.</p>
+                            <ul class="space-y-2 text-sm text-gray-700 mb-6 flex-1">
+                                <li>• 80+ core utilities</li>
+                                <li>• 1 custom shortcut</li>
+                                <li>• CDN hosted script</li>
+                            </ul>
+                            <button class="w-full border border-gray-300 rounded-lg py-3 font-semibold hover:bg-gray-50 transition mt-auto">Start for free</button>
+                        </div>
+                        <div class="border-2 border-blue-500 rounded-2xl p-6 bg-gradient-to-b from-blue-50 to-white shadow-md scale-105 flex flex-col h-full">
+                            <p class="text-sm font-semibold text-blue-600 mb-1">Pro</p>
+                            <h4 class="text-3xl font-bold text-gray-900 mb-2">$12<span class="text-base text-gray-500">/mo</span></h4>
+                            <p class="text-gray-600 text-sm mb-4">Everything you need for production-ready apps.</p>
+                            <ul class="space-y-2 text-sm text-gray-700 mb-6 flex-1">
+                                <li>• Unlimited shortcuts</li>
+                                <li>• Inline container queries</li>
+                                <li>• Component presets</li>
+                                <li>• Priority support</li>
+                            </ul>
+                            <button class="w-full bg-blue-600 text-white rounded-lg py-3 font-semibold hover:bg-blue-700 transition mt-auto">Upgrade to Pro</button>
+                        </div>
+                        <div class="border border-gray-200 rounded-2xl p-6 bg-white shadow-sm flex flex-col h-full">
+                            <p class="text-sm font-semibold text-gray-500 mb-1">Teams</p>
+                            <h4 class="text-3xl font-bold text-gray-900 mb-2">Custom</h4>
+                            <p class="text-gray-600 text-sm mb-4">Custom integrations, training, and support.</p>
+                            <ul class="space-y-2 text-sm text-gray-700 mb-6 flex-1">
+                                <li>• Dedicated success engineer</li>
+                                <li>• On-prem options</li>
+                                <li>• Design system reviews</li>
+                            </ul>
+                            <button class="w-full border border-gray-300 rounded-lg py-3 font-semibold hover:bg-gray-50 transition mt-auto">Contact sales</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Stats Overview</h3>
+                    <div class="grid gap-6 m:grid-cols-1 d:grid-cols-4">
+                        <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+                            <p class="text-sm text-gray-500">Active Projects</p>
+                            <div class="text-3xl font-bold text-gray-900 mt-2">128</div>
+                            <span class="text-green-500 text-xs font-semibold">▲ 12% vs last week</span>
+                        </div>
+                        <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+                            <p class="text-sm text-gray-500">Avg Build Time</p>
+                            <div class="text-3xl font-bold text-gray-900 mt-2">0.4s</div>
+                            <span class="text-blue-500 text-xs font-semibold">Real-time updates</span>
+                        </div>
+                        <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+                            <p class="text-sm text-gray-500">Shortcuts Added</p>
+                            <div class="text-3xl font-bold text-gray-900 mt-2">642</div>
+                            <span class="text-purple-500 text-xs font-semibold">+58 today</span>
+                        </div>
+                        <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+                            <p class="text-sm text-gray-500">Deploy Success</p>
+                            <div class="text-3xl font-bold text-gray-900 mt-2">99.2%</div>
+                            <span class="text-green-500 text-xs font-semibold">Last 30 days</span>
                         </div>
                     </div>
                 </div>
@@ -1635,7 +1982,7 @@
         // Handle hash navigation
         function loadSectionFromHash() {
             const hash = window.location.hash.slice(1); // Remove #
-            const validSections = ['intro', 'spacing', 'typography', 'colors', 'responsive', 'flex', 'grid', 'borders', 'transforms', 'states', 'animations', 'visible', 'components', 'shortcuts', 'documentation'];
+            const validSections = ['intro', 'spacing', 'typography', 'colors', 'responsive', 'container-queries', 'flex', 'grid', 'borders', 'transforms', 'states', 'animations', 'visible', 'components', 'shortcuts', 'documentation'];
 
             if (hash && validSections.includes(hash)) {
                 showSection(hash, false); // Don't update hash since we're loading from it
@@ -1653,6 +2000,23 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Load section from hash or show intro
             loadSectionFromHash();
+
+            const cqSlider = document.getElementById('cq-slider');
+            const cqWidth = document.getElementById('cq-width');
+            const cqPreview = document.getElementById('cq-preview');
+
+            if (cqSlider && cqWidth && cqPreview) {
+                const updateCqDemo = (value) => {
+                    cqPreview.style.width = `${value}px`;
+                    cqWidth.textContent = `${value}px`;
+                };
+
+                cqSlider.addEventListener('input', (event) => {
+                    updateCqDemo(event.target.value);
+                });
+
+                updateCqDemo(cqSlider.value);
+            }
         });
     </script>
 </body>
