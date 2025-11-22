@@ -12,7 +12,7 @@ DuxWind was created to bridge the gap between Tailwind CSS's powerful utility-fi
 - **Zero-friction setup** - Drop in a single script tag and start building
 - **No build step required** - Perfect for prototypes, learning, and environments where build tools aren't feasible
 - **Enhanced syntax flexibility** - Support for both `p-12px` and `p-[12px]` notation for natural value input
-- **Intuitive responsive syntax** - Choose between `m:`, `@m`, or pipe notation (`p-4|8`) based on your preference
+- **Intuitive responsive syntax** - Use built-in `m:`/`t:`/`d:` (plus `mobile:`/`tablet:`/`desktop:`) prefixes, property-first `@m`, or compact pipe notation (`p-4|8`)
 - **Built-in shortcuts system** - Create reusable component classes without additional tooling
 - **Complete solution** - CSS reset, utilities, and animations included out of the box
 
@@ -38,7 +38,7 @@ DuxWind maintains compatibility with Tailwind's core concepts while adding conve
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://dux.github.io/dux-wind/src/dux-wind.js"></script>
+    <script src="https://dux.github.io/duxwind/src/duxwind.js"></script>
     <script>
         // Default configuration auto-loads - just initialize!
         DuxWind.init();
@@ -57,22 +57,26 @@ DuxWind maintains compatibility with Tailwind's core concepts while adding conve
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://dux.github.io/dux-wind/src/dux-wind.js"></script>
+    <script src="https://dux.github.io/duxwind/src/duxwind.js"></script>
     <script>
-        // Optional: Override default breakpoints
-        DuxWind.config.breakpoints = {
-            's': '(max-width: 480px)',    // Small mobile
-            'm': '(max-width: 768px)',    // Mobile
-            't': '(max-width: 1024px)',   // Tablet
-            'd': '(min-width: 1025px)'    // Desktop
-        };
+        // DuxWind ships with `m`/`t`/`d` (and mobile/tablet/desktop) breakpoints preloaded.
+        // Override them via init if you need a different map.
+        DuxWind.init({
+            debug: true,
+            breakpoints: {
+                's': '(max-width: 480px)',    // Small mobile
+                'm': '(max-width: 768px)',    // Mobile
+                't': '(max-width: 1024px)',   // Tablet
+                'd': '(min-width: 1025px)'    // Desktop
+            }
+        });
 
         // Optional: Add custom shortcuts
-        DuxWind.shortcut('btn': 'px-4 py-2 rounded font-medium cursor-pointer');
-        DuxWind.shortcut('btn-primary': 'btn bg-blue-500 text-white hover:bg-blue-600');
-        DuxWind.shortcut('card': 'bg-white rounded border p-6 shadow-sm');
-
-        DuxWind.init({ debug: true });
+        DuxWind.shortcut({
+            'btn': 'px-4 py-2 rounded font-medium cursor-pointer',
+            'btn-primary': 'btn bg-blue-500 text-white hover:bg-blue-600',
+            'card': 'bg-white rounded border p-6 shadow-sm'
+        });
     </script>
 </head>
 <body>
@@ -125,20 +129,34 @@ DuxWind.loadDefaultConfig();
 **What's Auto-Loaded:**
 - **100+ CSS Properties:** `p-4` (padding), `m-8` (margin), `w-full` (width), `text-lg` (font-size), `bg-blue-500` (background), etc.
 - **200+ Keyword Classes:** `flex`, `grid`, `rounded`, `shadow-lg`, `animate-spin`, `transition`, `cursor-pointer`, etc.
-- **Responsive Breakpoints:** `m:` (mobile), `d:` (desktop)
+- **Responsive Breakpoints:** `m`/`t`/`d` plus friendly `mobile`/`tablet`/`desktop` aliases (override via `DuxWind.init`)
 - **All Pseudo-classes:** `hover:`, `focus:`, `active:`, `first:`, `last:`, `even:`, `odd:`, `disabled:`, `visible:`, etc.
 - **Animations & Transitions:** `animate-spin`, `animate-pulse`, `duration-300`, `ease-in-out`
 - **Layout Systems:** Flexbox, CSS Grid, positioning, spacing utilities
 
 ### Custom Breakpoints
 
+DuxWind ships with pragmatic defaults tailored for rapid prototyping:
+
+| Prefix | Media Query |
+| ------ | ----------- |
+| `m` (mobile) | `(max-width: 768px)` |
+| `t` (tablet) | `(min-width: 769px) and (max-width: 1024px)` |
+| `d` (desktop) | `(min-width: 1025px)` |
+
+Override them any time during initialization:
+
 ```javascript
-// Redefine breakpoints
-DuxWind.config.breakpoints = {
-    'm': '(max-width: 768px)',    // Mobile
-    'd': '(min-width: 769px)'     // Desktop
-};
+// Redefine breakpoints during initialization
+DuxWind.init({
+    breakpoints: {
+        'm': '(max-width: 768px)',    // Mobile
+        'd': '(min-width: 769px)'     // Desktop
+    }
+});
 ```
+
+> ℹ️ Breakpoints must be supplied via `DuxWind.init({ breakpoints: { … } })`.
 
 ### Custom Shortcuts
 
@@ -157,22 +175,22 @@ DuxWind supports multiple syntaxes for responsive design:
 
 ### Traditional Breakpoint Syntax
 ```html
-<div class="m:text-16px d:text-24px">
-    Small text on mobile, large on desktop
+<div class="text-16px d:text-24px">
+    Base text on mobile, large on desktop (`d:` prefix)
 </div>
 ```
 
 ### @ Notation (Alternative)
 ```html
 <div class="text-16px@m text-24px@d">
-    Same as above, property-first syntax
+    Same as above, property-first syntax using `@m` / `@d`
 </div>
 ```
 
 ### Pipe Notation (Compact)
 ```html
 <div class="text-16|24px">
-    Values for each breakpoint: mobile|desktop
+    Values follow your breakpoint order (defaults: `m|t|d`)
 </div>
 
 <div class="p-4|8">
@@ -613,18 +631,18 @@ DuxWind.config = {
 ### Responsive Design (3 Methods)
 ```html
 <!-- Method 1: Prefix Notation -->
-<div class="text-sm m:text-base d:text-lg">
-    Small → Base → Large
+<div class="text-base m:text-lg d:text-xl">
+    Base → mobile → desktop
 </div>
 
 <!-- Method 2: @ Notation -->
-<div class="text-sm@m text-lg@d">
+<div class="text-base@m text-xl@d">
     Alternative responsive syntax
 </div>
 
 <!-- Method 3: Pipe Notation (Most Compact) -->
-<div class="text-sm|lg p-4|8 w-full|500px">
-    Values for mobile|desktop
+<div class="text-base|lg p-4|8 w-full|500px">
+    Values follow `m|t|d` order (or your custom map)
 </div>
 
 <!-- Complex Responsive Example -->
@@ -772,6 +790,7 @@ DuxWind.config = {
 ### Custom Shortcut System
 ```javascript
 // Complete button and component system
+// (Example uses built-in `m`/`t`/`d` breakpoints)
 DuxWind.config.shortcuts = {
     // Base components
     'btn': 'px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer border focus:ring-4',
@@ -877,7 +896,13 @@ DuxWind.config.shortcuts = {
 ```javascript
 // Change settings without rebuilding
 DuxWind.config.pixelMultiplier = 5; // p-4 = 20px now
-DuxWind.config.breakpoints.t = '(max-width: 1024px)'; // Add tablet
+
+// Breakpoints must be provided during initialization
+DuxWind.init({
+    breakpoints: {
+        t: '(max-width: 1024px)'
+    }
+});
 
 // Dynamic shortcut creation
 DuxWind.shortcut('hero', 'text-4xl font-bold mb-8');

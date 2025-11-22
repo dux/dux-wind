@@ -5,7 +5,7 @@ import { safeWrapper, escapeSelector } from './utils.js';
 
 /**
  * Check if a class name is a shortcut
- * @param {string} className 
+ * @param {string} className
  * @returns {boolean}
  */
 export function isShortcut(className) {
@@ -14,7 +14,7 @@ export function isShortcut(className) {
 
 /**
  * Get shortcut definition
- * @param {string} shortcutName 
+ * @param {string} shortcutName
  * @returns {string|null} Space-separated class list or null
  */
 export function getShortcut(shortcutName) {
@@ -23,27 +23,24 @@ export function getShortcut(shortcutName) {
 
 /**
  * Add or update a shortcut
- * @param {string} name 
- * @param {string} classes 
+ * @param {string} name
+ * @param {string} classes
  * @returns {boolean} Success status
  */
 export function addShortcut(name, classes) {
-  if (CONFIG.keywords?.[name]) {
-    console.error(`DuxWind: cant create shortcut "${name}" because it is already defined as a keyword class`);
-    return false;
-  }
-
   if (!CONFIG.shortcuts) {
     CONFIG.shortcuts = {};
   }
-
+  if (CONFIG.keywords?.[name]) {
+    console.warn(`DuxWind: shortcut "${name}" overrides existing keyword class`);
+  }
   CONFIG.shortcuts[name] = classes;
   return true;
 }
 
 /**
  * Expand a shortcut to its constituent classes recursively
- * @param {string} shortcutName 
+ * @param {string} shortcutName
  * @returns {string[]} Array of expanded class names
  */
 export function expandShortcut(shortcutName) {
@@ -53,6 +50,7 @@ export function expandShortcut(shortcutName) {
 
   const shortcutClasses = getShortcut(shortcutName).split(/\s+/).filter(Boolean);
   const expandedClasses = [];
+  const seenClasses = new Set();
 
   function expandClasses(classes) {
     classes.forEach(className => {
@@ -62,7 +60,8 @@ export function expandShortcut(shortcutName) {
         expandClasses(nestedClasses);
       } else {
         // Regular class - add to expanded list if not already present
-        if (!expandedClasses.includes(className)) {
+        if (!seenClasses.has(className)) {
+          seenClasses.add(className);
           expandedClasses.push(className);
         }
       }
@@ -75,7 +74,7 @@ export function expandShortcut(shortcutName) {
 
 /**
  * Generate CSS for a shortcut by processing its constituent classes
- * @param {string} shortcutName 
+ * @param {string} shortcutName
  * @param {function} processClassFunction - Function to process individual classes (unused, kept for compatibility)
  * @returns {string[]} Array of CSS rules
  */
@@ -83,55 +82,21 @@ export const generateShortcutCSS = safeWrapper(function(shortcutName, processCla
   if (!shortcutName || typeof shortcutName !== 'string') {
     return [];
   }
-  
+
   if (!isShortcut(shortcutName)) {
     return [];
   }
 
   const expandedClasses = expandShortcut(shortcutName);
-  
-  // Use styler's generateStyles for all the heavy lifting
   const allRules = generateStyles(expandedClasses.join(' '));
+  const parsedRules = allRules
+    .map(parseShortcutRule)
+    .filter(Boolean);
 
-  // Replace selectors with shortcut name while preserving pseudo-states and media queries
   const shortcutSelector = escapeSelector(shortcutName);
-  const shortcutRules = allRules.map(rule => {
-    // For each rule, replace the first class selector with the shortcut selector
-    // while preserving everything else (pseudo-states, media queries, etc.)
-    
-    // Media query rule: @media ... { .class-name:pseudo { ... } }
-    if (rule.startsWith('@media')) {
-      return rule.replace(
-        /(\@media[^{]+\{\s*)\.((?:\\.|[^:\\s])+)(:[^{]*)?(\s*\{[^}]+\}\s*\})/,
-        `$1.${shortcutSelector}$3$4`
-      );
-    }
-    
-    // Regular rule: .class-name:pseudo { ... }
-    // Simple replacement: find the selector up to space or { and replace it
-    const selectorEndIndex = rule.indexOf(' ');
-    if (selectorEndIndex !== -1) {
-      // Find the pseudo-state part (everything after the last unescaped colon)
-      const selectorPart = rule.substring(0, selectorEndIndex);
-      const restPart = rule.substring(selectorEndIndex);
-      
-      // Look for unescaped colon in selector (marks pseudo-state)
-      const lastColonIndex = selectorPart.lastIndexOf(':');
-      if (lastColonIndex > 0 && selectorPart[lastColonIndex - 1] !== '\\') {
-        // Has pseudo-state
-        const pseudoState = selectorPart.substring(lastColonIndex);
-        return `.${shortcutSelector}${pseudoState}${restPart}`;
-      } else {
-        // No pseudo-state
-        return `.${shortcutSelector}${restPart}`;
-      }
-    }
-    
-    // Fallback: just replace the class name part
-    return rule.replace(/^\.[\w\-\\:\/]+/, `.${shortcutSelector}`);
-  });
+  const nestedCSS = buildNestedShortcutCSS(shortcutSelector, parsedRules);
 
-  return shortcutRules;
+  return nestedCSS ? [nestedCSS] : [];
 }, 'generateShortcutCSS');
 
 // Set default value for error cases
@@ -147,7 +112,7 @@ export function getAllShortcuts() {
 
 /**
  * Remove a shortcut
- * @param {string} name 
+ * @param {string} name
  * @returns {boolean} Success status
  */
 export function removeShortcut(name) {
@@ -173,35 +138,189 @@ export function clearShortcuts() {
 export function generateShortcutCSSFromClasses(classNames) {
   // Use existing generateStyles to get CSS rules
   const cssRules = generateStyles(classNames);
-  
+
   if (cssRules.length === 0) {
     return '/* No CSS generated for the provided class names */';
   }
 
-  // Replace all class selectors with .shortcut
-  const shortcutRules = cssRules.map(rule => {
-    // Replace any CSS class selector with .shortcut while preserving pseudo-states
-    // This handles both regular and media query rules
-    return rule.replace(/\.[\w\-\\:\/]+(\:[a-z\-]+(?:\([^)]*\))?)?/g, (match) => {
-      // Check if match has a real pseudo-state (unescaped colon at the end)
-      const lastColonIndex = match.lastIndexOf(':');
-      if (lastColonIndex > 0 && match[lastColonIndex - 1] !== '\\') {
-        // Has pseudo-state
-        const pseudoState = match.substring(lastColonIndex);
-        return `.shortcut${pseudoState}`;
-      } else {
-        // No pseudo-state
-        return '.shortcut';
+  const parsedRules = cssRules
+    .map(parseShortcutRule)
+    .filter(Boolean);
+
+  const nestedCSS = buildNestedShortcutCSS(escapeSelector('shortcut'), parsedRules);
+  return nestedCSS || '/* No CSS generated for the provided class names */';
+}
+
+function parseShortcutRule(rule) {
+  if (!rule || typeof rule !== 'string') {
+    return null;
+  }
+
+  return parseRuleRecursive(rule.trim(), []);
+}
+
+function parseRuleRecursive(rule, atRules) {
+  if (!rule) return null;
+  const trimmed = rule.trim();
+  if (!trimmed) return null;
+
+  if (trimmed.startsWith('@')) {
+    const atRuleBlock = extractAtRuleBlock(trimmed);
+    if (!atRuleBlock) return null;
+    return parseRuleRecursive(atRuleBlock.content, [...atRules, atRuleBlock.atRule]);
+  }
+
+  const firstBrace = trimmed.indexOf('{');
+  const lastBrace = trimmed.lastIndexOf('}');
+  if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
+    return null;
+  }
+
+  const selectorPart = trimmed.slice(0, firstBrace).trim();
+  const declarationPart = trimmed.slice(firstBrace + 1, lastBrace).trim();
+
+  if (!selectorPart.startsWith('.')) {
+    return null;
+  }
+
+  const suffix = extractSelectorSuffix(selectorPart);
+  const declarations = splitDeclarations(declarationPart);
+
+  return {
+    atRules,
+    suffix,
+    declarations
+  };
+}
+
+function extractAtRuleBlock(rule) {
+  const firstBrace = rule.indexOf('{');
+  if (firstBrace === -1) {
+    return null;
+  }
+
+  const atRule = rule.slice(0, firstBrace).trim();
+  let depth = 0;
+  for (let i = firstBrace; i < rule.length; i++) {
+    const char = rule[i];
+    if (char === '{') {
+      depth++;
+    } else if (char === '}') {
+      depth--;
+      if (depth === 0) {
+        const content = rule.slice(firstBrace + 1, i).trim();
+        const remainder = rule.slice(i + 1).trim();
+        return {
+          atRule,
+          content: remainder ? `${content} ${remainder}`.trim() : content
+        };
       }
-    });
+    }
+  }
+
+  return null;
+}
+
+function extractSelectorSuffix(selector) {
+  const trimmed = selector.trim();
+  if (!trimmed) return '';
+
+  let splitIndex = trimmed.length;
+  for (let i = 1; i < trimmed.length; i++) {
+    const char = trimmed[i];
+    if ((char === ':' || char === '.') && trimmed[i - 1] !== '\\') {
+      splitIndex = i;
+      break;
+    }
+  }
+
+  return trimmed.slice(splitIndex);
+}
+
+function splitDeclarations(block) {
+  if (!block) return [];
+
+  return block
+    .split(';')
+    .map(part => part.trim())
+    .filter(Boolean)
+    .map(part => (part.endsWith(';') ? part : `${part};`));
+}
+
+function buildNestedShortcutCSS(shortcutSelector, parsedRules) {
+  if (!parsedRules.length) {
+    return null;
+  }
+
+  const rootBucket = createBucket();
+  parsedRules.forEach(rule => {
+    addRuleToBucket(rootBucket, rule, 0);
   });
 
-  return shortcutRules.join('\n');
+  const body = renderBucket(rootBucket, 1);
+  if (!body.trim()) {
+    return null;
+  }
+
+  return `.${shortcutSelector} {\n${body}}`;
+}
+
+function createBucket() {
+  return {
+    declarations: [],
+    modifiers: new Map(),
+    atRules: new Map()
+  };
+}
+
+function addRuleToBucket(bucket, rule, depth) {
+  if (depth < rule.atRules.length) {
+    const atRule = rule.atRules[depth];
+    if (!bucket.atRules.has(atRule)) {
+      bucket.atRules.set(atRule, createBucket());
+    }
+    addRuleToBucket(bucket.atRules.get(atRule), rule, depth + 1);
+    return;
+  }
+
+  if (rule.suffix) {
+    if (!bucket.modifiers.has(rule.suffix)) {
+      bucket.modifiers.set(rule.suffix, []);
+    }
+    bucket.modifiers.get(rule.suffix).push(...rule.declarations);
+  } else {
+    bucket.declarations.push(...rule.declarations);
+  }
+}
+
+function renderBucket(bucket, level) {
+  const indent = '  '.repeat(level);
+  const segments = [];
+
+  bucket.declarations.forEach(line => {
+    segments.push(`${indent}${line}\n`);
+  });
+
+  for (const [suffix, lines] of bucket.modifiers) {
+    segments.push(`${indent}&${suffix} {\n`);
+    lines.forEach(line => {
+      segments.push(`${indent}  ${line}\n`);
+    });
+    segments.push(`${indent}}\n`);
+  }
+
+  for (const [atRule, childBucket] of bucket.atRules) {
+    segments.push(`${indent}${atRule} {\n`);
+    segments.push(renderBucket(childBucket, level + 1));
+    segments.push(`${indent}}\n`);
+  }
+
+  return segments.join('');
 }
 
 /**
  * Check if shortcuts have circular dependencies
- * @param {string} shortcutName 
+ * @param {string} shortcutName
  * @param {Set} visited - Internal tracking of visited shortcuts
  * @returns {boolean} True if circular dependency detected
  */
@@ -228,8 +347,8 @@ export function hasCircularDependency(shortcutName, visited = new Set()) {
 
 /**
  * Validate shortcut definition
- * @param {string} name 
- * @param {string} classes 
+ * @param {string} name
+ * @param {string} classes
  * @returns {object} Validation result with success and error properties
  */
 export function validateShortcut(name, classes) {
@@ -249,7 +368,7 @@ export function validateShortcut(name, classes) {
   CONFIG.shortcuts[name] = classes;
 
   const hasCircular = hasCircularDependency(name);
-  
+
   // Restore original state
   if (originalShortcut) {
     CONFIG.shortcuts[name] = originalShortcut;

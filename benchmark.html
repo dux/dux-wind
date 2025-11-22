@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DuxWind Performance Benchmark</title>
-    <script type="module" src="src/dux-wind.js"></script>
+    <script type="module" src="src/duxwind.js"></script>
     <style>
         body { font-family: system-ui; margin: 2rem; }
         .benchmark { border: 1px solid #ccc; padding: 1rem; margin: 1rem 0; }
@@ -13,7 +13,7 @@
 </head>
 <body>
     <h1>DuxWind vs Tailwind Performance Comparison</h1>
-    
+
     <div class="benchmark">
         <h3>Test 1: Generate 100 unique classes</h3>
         <button onclick="benchmarkGeneration()">Run Benchmark</button>
@@ -35,7 +35,7 @@
     <script type="module">
         // Wait for DuxWind to be available
         let DuxWind;
-        
+
         // Check if DuxWind is available, wait if not
         function waitForDuxWind() {
             return new Promise((resolve) => {
@@ -50,9 +50,9 @@
                 check();
             });
         }
-        
+
         await waitForDuxWind();
-        
+
         DuxWind.resetCss();
         DuxWind.loadDefaultConfig();
         DuxWind.init({ debug: false });
@@ -69,26 +69,26 @@
                 'border', 'border-2', 'border-4',
                 'shadow', 'shadow-lg', 'shadow-xl'
             ];
-            
+
             // Extend to 100 unique classes
             for (let i = classes.length; i < 100; i++) {
                 classes.push(`w-${i}`, `h-${i}`, `text-${i}px`);
             }
 
             const startTime = performance.now();
-            
+
             classes.forEach(className => {
                 DuxWind.loadClass(className);
             });
-            
+
             const endTime = performance.now();
             const duration = (endTime - startTime).toFixed(2);
-            
+
             document.getElementById('generation-results').innerHTML = `
                 Classes processed: ${classes.length}
                 Time taken: ${duration}ms
                 Average per class: ${(duration / classes.length).toFixed(3)}ms
-                
+
                 Comparison:
                 - DuxWind: ${duration}ms (generated on-demand)
                 - Tailwind: ~50-200ms (initial CSS download + parse)
@@ -99,12 +99,12 @@
         window.benchmarkDOMProcessing = function() {
             const container = document.createElement('div');
             document.body.appendChild(container);
-            
+
             // Create 1000 elements with various classes
             const classOptions = ['p-4', 'bg-blue-100', 'text-center', 'rounded', 'border', 'shadow'];
-            
+
             const startTime = performance.now();
-            
+
             for (let i = 0; i < 1000; i++) {
                 const div = document.createElement('div');
                 const randomClasses = classOptions
@@ -114,7 +114,7 @@
                 div.textContent = `Element ${i}`;
                 container.appendChild(div);
             }
-            
+
             // Process all elements (simulates DuxWind's DOM observation)
             const elements = container.querySelectorAll('[class]');
             elements.forEach(el => {
@@ -122,52 +122,52 @@
                     if (cls) DuxWind.loadClass(cls);
                 });
             });
-            
+
             const endTime = performance.now();
             const duration = (endTime - startTime).toFixed(2);
-            
+
             document.getElementById('dom-results').innerHTML = `
                 Elements processed: 1000
                 Time taken: ${duration}ms
                 Average per element: ${(duration / 1000).toFixed(3)}ms
-                
+
                 Comparison:
                 - DuxWind: ${duration}ms (generate + apply)
                 - Tailwind: ~5-20ms (just apply existing CSS)
                 - Winner: ${duration < 20 ? 'DuxWind' : 'Tailwind'} for this test
             `;
-            
+
             // Cleanup
             container.remove();
         }
 
         window.benchmarkMemory = function() {
             if (!performance.memory) {
-                document.getElementById('memory-results').innerHTML = 
+                document.getElementById('memory-results').innerHTML =
                     'Memory API not available in this browser';
                 return;
             }
 
             const before = performance.memory.usedJSHeapSize;
-            
+
             // Generate lots of classes to test memory usage
             for (let i = 0; i < 500; i++) {
                 DuxWind.loadClass(`test-class-${i}`);
                 DuxWind.loadClass(`bg-color-${i}`);
                 DuxWind.loadClass(`p-${i % 20}`);
             }
-            
+
             const after = performance.memory.usedJSHeapSize;
             const memoryUsed = ((after - before) / 1024).toFixed(2);
-            
+
             document.getElementById('memory-results').innerHTML = `
                 Memory used by DuxWind: ${memoryUsed}KB
-                
+
                 Comparison:
                 - DuxWind: ${memoryUsed}KB (cached classes + generated CSS)
                 - Tailwind (purged): ~5-15KB (full CSS file)
                 - Tailwind (full): ~3500KB (full CSS file)
-                
+
                 Winner: ${memoryUsed < 100 ? 'DuxWind' : 'Tailwind (purged)'} for memory efficiency
             `;
         }
@@ -176,7 +176,7 @@
         setTimeout(() => {
             document.getElementById('generation-results').innerHTML = `
                 Click "Run Benchmark" to test DuxWind performance!
-                
+
                 Expected results:
                 - Small projects: DuxWind wins (faster initial load)
                 - Large projects: Depends on caching strategy

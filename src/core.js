@@ -1,13 +1,14 @@
 // DuxWind - Real-time CSS Generator Core
 import { CONFIG, createDefaultConfig } from './config.js';
 import { processClass, expandClass } from './styler.js';
-import { addShortcut } from './shortcuts.js';
+import { addShortcut, isShortcut } from './shortcuts.js';
 import { debounce, safeWrapper } from './utils.js';
 import { generateDoc } from './gen-doc.js';
 
 // State management - use CONFIG singleton
 const processedClasses = new Set();
-let styleElement = null;
+let utilityStyleElement = null;
+let shortcutStyleElement = null;
 let debugMode = false;
 let bodyClassMode = false;
 let currentBodyClass = null;
@@ -39,23 +40,23 @@ const processElement = safeWrapper(function(element) {
   if (!originalClassString || !originalClassString.trim()) return;
 
   const processedClassString = expandClassString(originalClassString);
-  
+
   // Replace class attribute if it changed
   if (processedClassString !== originalClassString) {
     element.setAttribute('class', processedClassString);
-    
+
     // Add debug info if enabled
     if (debugMode) {
       element.setAttribute('data-dw-original', originalClassString);
     }
   }
-  
+
   // Generate CSS for all processed classes
   const processedClasses = processedClassString.split(/\s+/).filter(Boolean);
   processedClasses.forEach(className => {
     processClassForCSS(className);
   });
-  
+
   // Check if any classes use visible: pseudo-state
   const hasVisiblePseudo = processedClasses.some(cls => cls.includes('visible:'));
   if (hasVisiblePseudo) {
@@ -72,9 +73,10 @@ const processClassForCSS = safeWrapper(function(className) {
 
   // Use styler to generate CSS rules
   const cssRules = processClass(className);
+  const targetBucket = isShortcut(className) ? 'shortcut' : 'utility';
   cssRules.forEach(rule => {
     if (rule) {
-      injectCSS(rule);
+      injectCSS(rule, targetBucket);
     }
   });
 }, 'processClassForCSS');
@@ -89,19 +91,40 @@ function processNodeTree(node) {
 }
 
 // CSS injection - immediate for reliability
-function injectCSS(css) {
-  ensureStyleElement();
-  styleElement.textContent += css + '\n';
+function injectCSS(css, target = 'utility') {
+  if (!css) return;
+
+  if (target === 'shortcut') {
+    ensureShortcutStyleElement();
+    shortcutStyleElement.textContent += css + '\n';
+    return;
+  }
+
+  ensureUtilityStyleElement();
+  utilityStyleElement.textContent += css + '\n';
 }
 
-function ensureStyleElement() {
-  if (styleElement) return;
+function ensureUtilityStyleElement() {
+  if (utilityStyleElement || typeof document === 'undefined') return;
 
-  styleElement = document.createElement('style');
-  styleElement.setAttribute('data-duxwind', 'true');
-  document.head.appendChild(styleElement);
+  utilityStyleElement = document.getElementById('duxwind');
+  if (!utilityStyleElement) {
+    utilityStyleElement = document.createElement('style');
+    utilityStyleElement.id = 'duxwind';
+    document.head.appendChild(utilityStyleElement);
+    utilityStyleElement.textContent = getAnimationKeyframes();
+  }
+}
 
-  styleElement.textContent = getAnimationKeyframes();
+function ensureShortcutStyleElement() {
+  if (shortcutStyleElement || typeof document === 'undefined') return;
+
+  shortcutStyleElement = document.getElementById('duxwind-shortcuts');
+  if (!shortcutStyleElement) {
+    shortcutStyleElement = document.createElement('style');
+    shortcutStyleElement.id = 'duxwind-shortcuts';
+    document.head.appendChild(shortcutStyleElement);
+  }
 }
 
 function getAnimationKeyframes() {
@@ -133,6 +156,10 @@ export function init(options = {}) {
   }
 
   const settings = parseInitOptions(options);
+
+  if (settings.breakpoints) {
+    applyBreakpointOverrides(settings.breakpoints);
+  }
   debugMode = settings.debug;
 
   if (typeof window !== 'undefined') {
@@ -151,11 +178,11 @@ export function init(options = {}) {
   elementsWithClasses.forEach(processElement);
 
   setupMutationObserver();
-  
+
   if (settings.body) {
     setupBodyClassManagement();
   }
-  
+
   // Setup visibility observer for existing elements with visible: pseudo
   const elementsWithVisible = document.querySelectorAll('[class*="visible:"]');
   if (elementsWithVisible.length > 0) {
@@ -171,6 +198,35 @@ function parseInitOptions(options) {
     clearCache: true,
     ...options
   };
+}
+
+function applyBreakpointOverrides(breakpointMap) {
+  if (!isPlainObject(breakpointMap)) {
+    console.warn('DuxWind: init breakpoints must be provided as an object map.');
+    return;
+  }
+
+  const normalized = {};
+  Object.entries(breakpointMap).forEach(([key, value]) => {
+    if (typeof value === 'string' && value.trim()) {
+      normalized[key] = value.trim();
+    } else {
+      console.warn(`DuxWind: breakpoint "${key}" must be a non-empty string media query.`);
+    }
+  });
+
+  if (!Object.keys(normalized).length) {
+    return;
+  }
+
+  CONFIG.breakpoints = {
+    ...CONFIG.breakpoints,
+    ...normalized
+  };
+}
+
+function isPlainObject(value) {
+  return value && typeof value === 'object' && !Array.isArray(value);
 }
 
 function setupMutationObserver() {
@@ -196,14 +252,14 @@ function setupMutationObserver() {
 
 function setupVisibilityObserver() {
   if (visibilityObserver) return;
-  
+
   visibilityObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       const element = entry.target;
       const visibleClasses = elementsWithVisiblePseudo.get(element);
-      
+
       if (!visibleClasses) return;
-      
+
       if (entry.isIntersecting) {
         // Element is visible - add the visible state
         element.classList.add('dw-visible');
@@ -253,20 +309,48 @@ export function loadClass(className) {
   processClassForCSS(className);
 }
 
-export function shortcut(name, classes) {
-  return addShortcut(name, classes);
+function registerShortcut(shortcutName, shortcutClasses) {
+  const existingDefinition = CONFIG.shortcuts?.[shortcutName];
+  if (existingDefinition === shortcutClasses) {
+    return true; // Nothing changed, skip reprocessing
+  }
+
+  const success = addShortcut(shortcutName, shortcutClasses);
+  if (!success) {
+    return false;
+  }
+
+  // Allow regenerated CSS for this class
+  processedClasses.delete(shortcutName);
+
+  // Immediately inject CSS for shortcuts that may already exist in the DOM
+  if (typeof document !== 'undefined') {
+    processClassForCSS(shortcutName);
+  }
+
+  return true;
+}
+
+export function shortcut(nameOrMap, classes) {
+  if (nameOrMap && typeof nameOrMap === 'object' && !Array.isArray(nameOrMap)) {
+    return Object.entries(nameOrMap).every(([shortcutName, shortcutClasses]) => {
+      return registerShortcut(shortcutName, shortcutClasses);
+    });
+  }
+
+  return registerShortcut(nameOrMap, classes);
 }
 
 // Body class management
 function setupBodyClassManagement() {
   bodyClassMode = true;
-  
+
   // Set initial body class
   updateBodyClass();
-  
+
   // Create debounced update function using utils
   const debouncedUpdate = debounce(updateBodyClass, 100);
-  
+
   // Setup resize observer
   if (typeof window !== 'undefined' && window.ResizeObserver) {
     resizeObserver = new ResizeObserver(debouncedUpdate);
@@ -279,59 +363,88 @@ function setupBodyClassManagement() {
 
 function updateBodyClass() {
   if (!bodyClassMode || typeof window === 'undefined') return;
-  
+
   const currentBreakpoint = getCurrentBreakpoint();
   const friendlyName = mapBreakpointToFriendlyName(currentBreakpoint);
-  
+
   if (debugMode) {
     console.log('DuxWind: Breakpoint check - current:', currentBreakpoint, 'friendly:', friendlyName, 'width:', window.innerWidth);
   }
-  
+
   if (currentBodyClass !== friendlyName) {
     // Remove old body class
     if (currentBodyClass) {
       document.body.classList.remove(currentBodyClass);
     }
-    
+
     // Add new body class
     if (friendlyName) {
       document.body.classList.add(friendlyName);
     }
-    
+
     currentBodyClass = friendlyName;
   }
 }
 
 function getCurrentBreakpoint() {
   const breakpoints = CONFIG.breakpoints;
-  const width = window.innerWidth;
-  
-  // Check each breakpoint
-  for (const [breakpointName, mediaQuery] of Object.entries(breakpoints)) {
-    if (window.matchMedia(mediaQuery).matches) {
-      return breakpointName;
+  const width = typeof window !== 'undefined' ? window.innerWidth : 0;
+
+  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    const matching = [];
+
+    for (const [breakpointName, mediaQuery] of Object.entries(breakpoints)) {
+      try {
+        if (window.matchMedia(mediaQuery).matches) {
+          matching.push([breakpointName, mediaQuery]);
+        }
+      } catch (error) {
+        if (debugMode) {
+          console.warn('DuxWind: invalid breakpoint media query', mediaQuery, error);
+        }
+      }
+    }
+
+    if (matching.length > 0) {
+      matching.sort((a, b) => getBreakpointWeight(b[1]) - getBreakpointWeight(a[1]));
+      return matching[0][0];
     }
   }
-  
+
   // Default fallback based on width if no media query matches
-  // This handles the case where viewport doesn't match any breakpoint
   if (width <= 768) {
     return 'm';
-  } else {
-    return 'd';
   }
+  return 'd';
 }
 
 function mapBreakpointToFriendlyName(breakpointName) {
   if (!breakpointName) return null;
-  
+
   const mapping = {
     'm': 'mobile',
-    'd': 'desktop', 
+    'd': 'desktop',
     't': 'tablet'
   };
-  
+
   return mapping[breakpointName] || breakpointName;
+}
+
+function getBreakpointWeight(mediaQuery) {
+  if (!mediaQuery || typeof mediaQuery !== 'string') return 0;
+
+  const minMatch = mediaQuery.match(/min-width\s*:\s*(\d+)px/i);
+  if (minMatch) {
+    return parseInt(minMatch[1], 10);
+  }
+
+  const maxMatch = mediaQuery.match(/max-width\s*:\s*(\d+)px/i);
+  if (maxMatch) {
+    // Negative so min-widths always outrank max-widths when both match
+    return -parseInt(maxMatch[1], 10);
+  }
+
+  return 0;
 }
 
 export { CONFIG };

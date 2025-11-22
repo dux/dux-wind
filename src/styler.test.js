@@ -3,7 +3,7 @@ import { describe, test, expect } from 'bun:test';
 import { generateStyles, processClass } from './styler.js';
 
 describe('DuxWind Styler - Standalone CSS Generation', () => {
-  
+
   test('Basic class generation: p-4 → padding: 16px', () => {
     const styles = generateStyles('p-4');
     expect(styles).toHaveLength(1);
@@ -13,27 +13,27 @@ describe('DuxWind Styler - Standalone CSS Generation', () => {
   test('Pipe notation: p-10|20 → creates 2 responsive rules', () => {
     const styles = generateStyles('p-10|20');
     expect(styles).toHaveLength(2);
-    
-    // Should create mobile and desktop rules
+
+    // Should create default m/t responsive rules
     const mobileRule = styles.find(rule => rule.includes('max-width: 768px'));
-    const desktopRule = styles.find(rule => rule.includes('min-width: 769px'));
-    
+    const tabletRule = styles.find(rule => rule.includes('max-width: 1024px'));
+
     expect(mobileRule).toBeDefined();
-    expect(desktopRule).toBeDefined();
+    expect(tabletRule).toBeDefined();
     expect(mobileRule).toMatch(/padding:\s*40px/);
-    expect(desktopRule).toMatch(/padding:\s*80px/);
+    expect(tabletRule).toMatch(/padding:\s*80px/);
   });
 
   test('Multiple classes: "p-4 bg-blue-500 hover:text-white" → generates 3 rules', () => {
     const styles = generateStyles('p-4 bg-blue-500 hover:text-white');
     expect(styles).toHaveLength(3);
-    
+
     const paddingRule = styles.find(rule => rule.includes('padding'));
     const backgroundRule = styles.find(rule => rule.includes('background-color'));
     const hoverRule = styles.find(rule => rule.includes(':hover'));
-    
+
     expect(paddingRule).toBeDefined();
-    expect(backgroundRule).toBeDefined(); 
+    expect(backgroundRule).toBeDefined();
     expect(hoverRule).toBeDefined();
   });
 
@@ -53,10 +53,10 @@ describe('DuxWind Styler - Standalone CSS Generation', () => {
   test('Keyword classes: flex justify-center → display and justify-content', () => {
     const styles = generateStyles('flex justify-center');
     expect(styles).toHaveLength(2);
-    
+
     const flexRule = styles.find(rule => rule.includes('display: flex'));
     const justifyRule = styles.find(rule => rule.includes('justify-content: center'));
-    
+
     expect(flexRule).toBeDefined();
     expect(justifyRule).toBeDefined();
   });
@@ -65,7 +65,7 @@ describe('DuxWind Styler - Standalone CSS Generation', () => {
     // Test single class with pipe notation
     const pipeResult = processClass('m-5|10');
     expect(pipeResult).toHaveLength(2);
-    
+
     // Test hover state
     const hoverResult = processClass('hover:bg-red-500');
     expect(hoverResult).toHaveLength(1);
@@ -79,18 +79,14 @@ describe('DuxWind Styler - Standalone CSS Generation', () => {
       'btn': 'px-4 py-2 rounded border cursor-pointer',
       'btn-primary': 'btn bg-blue-500 text-white hover:bg-blue-600'
     };
-    
+
     const styles = generateStyles('btn-primary');
-    
-    // Should generate multiple rules for the shortcut
-    expect(styles.length).toBeGreaterThan(1);
-    
-    // Should include base and hover states
-    const baseRule = styles.find(rule => rule.includes('.btn-primary') && !rule.includes(':hover'));
-    const hoverRule = styles.find(rule => rule.includes('.btn-primary:hover'));
-    
-    expect(baseRule).toBeDefined();
-    expect(hoverRule).toBeDefined();
+    expect(styles).toHaveLength(1);
+
+    const css = styles[0];
+    expect(css).toContain('.btn-primary {');
+    expect(css).toContain('&:hover {');
+    expect(css).toContain('background-color');
   });
 
   test('Edge cases: empty and invalid inputs', () => {
@@ -103,11 +99,11 @@ describe('DuxWind Styler - Standalone CSS Generation', () => {
 
   test('Performance test: generate 100 classes quickly', () => {
     const classAttribute = Array.from({ length: 100 }, (_, i) => `p-${i % 20}`).join(' ');
-    
+
     const start = performance.now();
     const styles = generateStyles(classAttribute);
     const end = performance.now();
-    
+
     expect(styles.length).toBeGreaterThan(0);
     expect(end - start).toBeLessThan(100); // Should be very fast (under 100ms)
   });

@@ -1,13 +1,13 @@
 {
-  "name": "dux-wind",
+  "name": "duxwind",
   "version": "0.1.0",
   "description": "Real-time Tailwind-like CSS generator with pipe notation, shortcuts, and dynamic CSS injection",
   "type": "module",
-  "main": "dist/dux-wind.js",
+  "main": "dist/duxwind.js",
   "exports": {
     ".": {
-      "import": "./dist/dux-wind.js",
-      "require": "./dist/dux-wind.cjs"
+      "import": "./dist/duxwind.js",
+      "require": "./dist/duxwind.cjs"
     },
     "./core": "./dist/core.js",
     "./config": "./dist/config.js",
@@ -24,11 +24,11 @@
     "README.md"
   ],
   "scripts": {
-    "build": "rm -rf dist/ && bun build src/dux-wind.js --outfile dist/dux-wind.js --format esm && bun build src/dux-wind.js --outfile dist/dux-wind.cjs --format cjs",
+    "build": "rm -rf dist/ && bun build src/duxwind.js --outfile dist/duxwind.js --format esm && bun build src/duxwind.js --outfile dist/duxwind.cjs --format cjs",
     "test": "bun test src/",
-    "start": "bun run bin/server.js",
-    "dev": "bun run --watch bin/server.js & bun build src/dux-wind.js --outdir dist --format esm --watch & bun build src/dux-wind.js --outdir dist --format cjs --outfile dist/dux-wind.cjs --watch",
-    "pages": "echo 'GitHub Pages ready! Enable Pages in repo settings.' && echo 'Demo will be at: https://dux.github.io/dux-wind/'",
+    "start": "bun bin/server.js",
+    "dev": "bun run bin/server.js & bun build src/duxwind.js --outdir dist --format cjs --outfile dist/duxwind.cjs --watch",
+    "pages": "open https://dux.github.io/duxwind/",
     "ai-bridge": "bun run bin/ai-bridge.js"
   },
   "keywords": [
@@ -44,11 +44,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dux/dux-wind.git"
+    "url": "https://github.com/dux/duxwind.git"
   },
-  "homepage": "https://dux.github.io/dux-wind/",
+  "homepage": "https://dux.github.io/duxwind/",
   "bugs": {
-    "url": "https://github.com/dux/dux-wind/issues"
+    "url": "https://github.com/dux/duxwind/issues"
   },
   "devDependencies": {
     "jsdom": "^22.1.0"

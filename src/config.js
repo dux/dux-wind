@@ -6,17 +6,21 @@
 export const CONSTANTS = {
   DEFAULT_PIXEL_MULTIPLIER: 4,
   DEFAULT_BREAKPOINTS: {
-    'm': '(max-width: 768px)', 
-    'd': '(min-width: 769px)'
+    'm': '(max-width: 768px)',
+    't': '(min-width: 769px) and (max-width: 1024px)',
+    'd': '(min-width: 1025px)',
+    'mobile': '(max-width: 768px)',
+    'tablet': '(min-width: 769px) and (max-width: 1024px)',
+    'desktop': '(min-width: 1025px)'
   },
   SUPPORTED_PSEUDO_STATES: [
-    'hover', 'focus', 'active', 'disabled', 'visited', 
+    'hover', 'focus', 'active', 'disabled', 'visited',
     'focus-within', 'focus-visible', 'first', 'last', 'odd', 'even',
     'visible'
   ],
   PSEUDO_SELECTOR_MAPPING: {
     'first': 'first-child',
-    'last': 'last-child', 
+    'last': 'last-child',
     'odd': 'nth-child(odd)',
     'even': 'nth-child(even)',
     'visible': '.dw-visible'  // Special handling for visibility state
@@ -174,7 +178,7 @@ function createDefaultProperties() {
     'accent': 'accent-color',
     'fill': 'fill',
     'stroke': 'stroke',
-    
+
     // Background
     'bg-image': 'background-image',
     'bg-position': 'background-position',
@@ -186,7 +190,7 @@ function createDefaultProperties() {
     'from': '--tw-gradient-from',
     'via': '--tw-gradient-via',
     'to': '--tw-gradient-to',
-    
+
     // Typography
     'font': 'font-family',
     'font-size': 'font-size',
@@ -203,12 +207,12 @@ function createDefaultProperties() {
     'whitespace': 'white-space',
     'word-break': 'word-break',
     'hyphens': 'hyphens',
-    
+
     // Lists
     'list-image': 'list-style-image',
     'list-position': 'list-style-position',
     'list-type': 'list-style-type',
-    
+
     // Appearance
     'appearance': 'appearance',
     'columns': 'columns',
@@ -217,15 +221,15 @@ function createDefaultProperties() {
     'break-after': 'break-after',
     'box-decoration': 'box-decoration-break',
     'box-sizing': 'box-sizing',
-    
+
     // Floats
     'float': 'float',
     'clear': 'clear',
-    
+
     // Object
     'object': 'object-fit',
     'object-position': 'object-position',
-    
+
     // Overflow
     'overflow': 'overflow',
     'overflow-x': 'overflow-x',
@@ -233,16 +237,16 @@ function createDefaultProperties() {
     'overscroll': 'overscroll-behavior',
     'overscroll-x': 'overscroll-behavior-x',
     'overscroll-y': 'overscroll-behavior-y',
-    
+
     // Position
     'position': 'position',
-    
+
     // Visibility
     'visibility': 'visibility',
-    
+
     // Z-Index
     'z': 'z-index',
-    
+
     // Flexbox
     'flex-direction': 'flex-direction',
     'flex-wrap': 'flex-wrap',
@@ -259,7 +263,7 @@ function createDefaultProperties() {
     'place-content': 'place-content',
     'place-items': 'place-items',
     'place-self': 'place-self',
-    
+
     // Grid
     'grid': 'grid',
     'grid-template': 'grid-template',
@@ -276,16 +280,16 @@ function createDefaultProperties() {
     'grid-row-start': 'grid-row-start',
     'grid-row-end': 'grid-row-end',
     'grid-area': 'grid-area',
-    
+
     // Spacing
     'space': 'margin',
-    
+
     // Sizing
     'aspect': 'aspect-ratio',
     'contain': 'contain',
     'container': 'container-type',
     'content': 'content',
-    
+
     // Transform
     'transform': 'transform',
     'transform-origin': 'transform-origin',
@@ -293,7 +297,7 @@ function createDefaultProperties() {
     'rotate': 'transform',
     'scale': 'transform',
     'skew': 'transform',
-    
+
     // Interactivity
     'accent-color': 'accent-color',
     'caret-color': 'caret-color',
@@ -309,7 +313,7 @@ function createDefaultProperties() {
     'touch-action': 'touch-action',
     'user-select': 'user-select',
     'will-change': 'will-change',
-    
+
     // SVG
     'fill': 'fill',
     'stroke': 'stroke',
@@ -318,19 +322,19 @@ function createDefaultProperties() {
     'stroke-dashoffset': 'stroke-dashoffset',
     'stroke-linecap': 'stroke-linecap',
     'stroke-linejoin': 'stroke-linejoin',
-    
+
     // Accessibility
     'sr': 'position',
     'not-sr': 'position',
     'forced-color-adjust': 'forced-color-adjust',
-    
+
     // Tables
     'border-collapse': 'border-collapse',
     'border-spacing': 'border-spacing',
     'table-layout': 'table-layout',
     'caption-side': 'caption-side',
     'empty-cells': 'empty-cells',
-    
+
     // Others
     'scroll-m': 'scroll-margin',
     'scroll-mt': 'scroll-margin-top',
@@ -374,33 +378,33 @@ function createDefaultKeywords() {
     'list-item': 'display: list-item',
     'hidden': 'display: none',
     'none': 'display: none',
-    
+
     // Box Sizing
     'box-border': 'box-sizing: border-box',
     'box-content': 'box-sizing: content-box',
-    
+
     // Floats
     'float-left': 'float: left',
     'float-right': 'float: right',
     'float-none': 'float: none',
-    
+
     // Clear
     'clear-left': 'clear: left',
     'clear-right': 'clear: right',
     'clear-both': 'clear: both',
     'clear-none': 'clear: none',
-    
+
     // Isolation
     'isolate': 'isolation: isolate',
     'isolation-auto': 'isolation: auto',
-    
+
     // Object Fit
     'object-contain': 'object-fit: contain',
     'object-cover': 'object-fit: cover',
     'object-fill': 'object-fit: fill',
     'object-none': 'object-fit: none',
     'object-scale-down': 'object-fit: scale-down',
-    
+
     // Object Position
     'object-bottom': 'object-position: bottom',
     'object-center': 'object-position: center',
@@ -411,7 +415,7 @@ function createDefaultKeywords() {
     'object-right-bottom': 'object-position: right bottom',
     'object-right-top': 'object-position: right top',
     'object-top': 'object-position: top',
-    
+
     // Overflow
     'overflow-auto': 'overflow: auto',
     'overflow-hidden': 'overflow: hidden',
@@ -428,7 +432,7 @@ function createDefaultKeywords() {
     'overflow-y-visible': 'overflow-y: visible',
     'overflow-x-scroll': 'overflow-x: scroll',
     'overflow-y-scroll': 'overflow-y: scroll',
-    
+
     // Overscroll Behavior
     'overscroll-auto': 'overscroll-behavior: auto',
     'overscroll-contain': 'overscroll-behavior: contain',
@@ -451,7 +455,7 @@ function createDefaultKeywords() {
     'visible': 'visibility: visible',
     'invisible': 'visibility: hidden',
     'collapse': 'visibility: collapse',
-    
+
     // Z-Index
     'z-0': 'z-index: 0',
     'z-10': 'z-index: 10',
@@ -477,15 +481,15 @@ function createDefaultKeywords() {
     'flex-auto': 'flex: 1 1 auto',
     'flex-initial': 'flex: 0 1 auto',
     'flex-none': 'flex: none',
-    
+
     // Flex Grow
     'grow': 'flex-grow: 1',
     'grow-0': 'flex-grow: 0',
-    
+
     // Flex Shrink
     'shrink': 'flex-shrink: 1',
     'shrink-0': 'flex-shrink: 0',
-    
+
     // Order
     'order-1': 'order: 1',
     'order-2': 'order: 2',
@@ -512,20 +516,20 @@ function createDefaultKeywords() {
     'justify-around': 'justify-content: space-around',
     'justify-evenly': 'justify-content: space-evenly',
     'justify-stretch': 'justify-content: stretch',
-    
+
     // Justify Items
     'justify-items-start': 'justify-items: start',
     'justify-items-end': 'justify-items: end',
     'justify-items-center': 'justify-items: center',
     'justify-items-stretch': 'justify-items: stretch',
-    
+
     // Justify Self
     'justify-self-auto': 'justify-self: auto',
     'justify-self-start': 'justify-self: start',
     'justify-self-end': 'justify-self: end',
     'justify-self-center': 'justify-self: center',
     'justify-self-stretch': 'justify-self: stretch',
-    
+
     // Align Content
     'content-normal': 'align-content: normal',
     'content-center': 'align-content: center',
@@ -551,7 +555,7 @@ function createDefaultKeywords() {
     'self-center': 'align-self: center',
     'self-stretch': 'align-self: stretch',
     'self-baseline': 'align-self: baseline',
-    
+
     // Place Content
     'place-content-center': 'place-content: center',
     'place-content-start': 'place-content: start',
@@ -561,14 +565,14 @@ function createDefaultKeywords() {
     'place-content-evenly': 'place-content: space-evenly',
     'place-content-baseline': 'place-content: baseline',
     'place-content-stretch': 'place-content: stretch',
-    
+
     // Place Items
     'place-items-start': 'place-items: start',
     'place-items-end': 'place-items: end',
     'place-items-center': 'place-items: center',
     'place-items-baseline': 'place-items: baseline',
     'place-items-stretch': 'place-items: stretch',
-    
+
     // Place Self
     'place-self-auto': 'place-self: auto',
     'place-self-start': 'place-self: start',
@@ -584,12 +588,12 @@ function createDefaultKeywords() {
     'text-justify': 'text-align: justify',
     'text-start': 'text-align: start',
     'text-end': 'text-align: end',
-    
+
     // Text Color (duplicates)
     'text-inherit': 'color: inherit',
     'text-current': 'color: currentColor',
     'text-transparent': 'color: transparent',
-    
+
     // Vertical Align
     'align-baseline': 'vertical-align: baseline',
     'align-top': 'vertical-align: top',
@@ -599,7 +603,7 @@ function createDefaultKeywords() {
     'align-text-bottom': 'vertical-align: text-bottom',
     'align-sub': 'vertical-align: sub',
     'align-super': 'vertical-align: super',
-    
+
     // Whitespace
     'whitespace-normal': 'white-space: normal',
     'whitespace-nowrap': 'white-space: nowrap',
@@ -607,18 +611,18 @@ function createDefaultKeywords() {
     'whitespace-pre-line': 'white-space: pre-line',
     'whitespace-pre-wrap': 'white-space: pre-wrap',
     'whitespace-break-spaces': 'white-space: break-spaces',
-    
+
     // Word Break
     'break-normal': 'overflow-wrap: normal; word-break: normal',
     'break-words': 'overflow-wrap: break-word',
     'break-all': 'word-break: break-all',
     'break-keep': 'word-break: keep-all',
-    
+
     // Hyphens
     'hyphens-none': 'hyphens: none',
     'hyphens-manual': 'hyphens: manual',
     'hyphens-auto': 'hyphens: auto',
-    
+
     // Content
     'content-none': 'content: none',
 
@@ -626,7 +630,7 @@ function createDefaultKeywords() {
     'font-sans': 'font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
     'font-serif': 'font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
     'font-mono': 'font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
-    
+
     // Font Size
     'text-xs': 'font-size: 0.75rem; line-height: 1rem',
     'text-sm': 'font-size: 0.875rem; line-height: 1.25rem',
@@ -641,11 +645,11 @@ function createDefaultKeywords() {
     'text-7xl': 'font-size: 4.5rem; line-height: 1',
     'text-8xl': 'font-size: 6rem; line-height: 1',
     'text-9xl': 'font-size: 8rem; line-height: 1',
-    
+
     // Font Style
     'italic': 'font-style: italic',
     'not-italic': 'font-style: normal',
-    
+
     // Font Weight
     'font-thin': 'font-weight: 100',
     'font-extralight': 'font-weight: 200',
@@ -656,7 +660,7 @@ function createDefaultKeywords() {
     'font-bold': 'font-weight: 700',
     'font-extrabold': 'font-weight: 800',
     'font-black': 'font-weight: 900',
-    
+
     // Font Variant Numeric
     'normal-nums': 'font-variant-numeric: normal',
     'ordinal': 'font-variant-numeric: ordinal',
@@ -673,14 +677,14 @@ function createDefaultKeywords() {
     'overline': 'text-decoration-line: overline',
     'line-through': 'text-decoration-line: line-through',
     'no-underline': 'text-decoration-line: none',
-    
+
     // Text Decoration Style
     'decoration-solid': 'text-decoration-style: solid',
     'decoration-double': 'text-decoration-style: double',
     'decoration-dotted': 'text-decoration-style: dotted',
     'decoration-dashed': 'text-decoration-style: dashed',
     'decoration-wavy': 'text-decoration-style: wavy',
-    
+
     // Text Decoration Thickness
     'decoration-auto': 'text-decoration-thickness: auto',
     'decoration-from-font': 'text-decoration-thickness: from-font',
@@ -689,7 +693,7 @@ function createDefaultKeywords() {
     'decoration-2': 'text-decoration-thickness: 2px',
     'decoration-4': 'text-decoration-thickness: 4px',
     'decoration-8': 'text-decoration-thickness: 8px',
-    
+
     // Text Underline Offset
     'underline-offset-auto': 'text-underline-offset: auto',
     'underline-offset-0': 'text-underline-offset: 0px',
@@ -703,12 +707,12 @@ function createDefaultKeywords() {
     'lowercase': 'text-transform: lowercase',
     'capitalize': 'text-transform: capitalize',
     'normal-case': 'text-transform: none',
-    
+
     // Text Overflow
     'truncate': 'overflow: hidden; text-overflow: ellipsis; white-space: nowrap',
     'text-ellipsis': 'text-overflow: ellipsis',
     'text-clip': 'text-overflow: clip',
-    
+
     // Text Indent
     'indent-0': 'text-indent: 0px',
     'indent-px': 'text-indent: 1px',
@@ -769,13 +773,13 @@ function createDefaultKeywords() {
     'bg-fixed': 'background-attachment: fixed',
     'bg-local': 'background-attachment: local',
     'bg-scroll': 'background-attachment: scroll',
-    
+
     // Background Clip
     'bg-clip-border': 'background-clip: border-box',
     'bg-clip-padding': 'background-clip: padding-box',
     'bg-clip-content': 'background-clip: content-box',
     'bg-clip-text': 'background-clip: text',
-    
+
     // Background Color (extended)
     'bg-inherit': 'background-color: inherit',
     'bg-current': 'background-color: currentColor',
@@ -1002,12 +1006,12 @@ function createDefaultKeywords() {
     'bg-rose-700': 'background-color: rgb(190 18 60)',
     'bg-rose-800': 'background-color: rgb(159 18 57)',
     'bg-rose-900': 'background-color: rgb(136 19 55)',
-    
+
     // Background Origin
     'bg-origin-border': 'background-origin: border-box',
     'bg-origin-padding': 'background-origin: padding-box',
     'bg-origin-content': 'background-origin: content-box',
-    
+
     // Background Position
     'bg-bottom': 'background-position: bottom',
     'bg-center': 'background-position: center',
@@ -1018,7 +1022,7 @@ function createDefaultKeywords() {
     'bg-right-bottom': 'background-position: right bottom',
     'bg-right-top': 'background-position: right top',
     'bg-top': 'background-position: top',
-    
+
     // Background Repeat
     'bg-repeat': 'background-repeat: repeat',
     'bg-no-repeat': 'background-repeat: no-repeat',
@@ -1026,7 +1030,7 @@ function createDefaultKeywords() {
     'bg-repeat-y': 'background-repeat: repeat-y',
     'bg-repeat-round': 'background-repeat: round',
     'bg-repeat-space': 'background-repeat: space',
-    
+
     // Background Size
     'bg-auto': 'background-size: auto',
     'bg-cover': 'background-size: cover',
@@ -1289,7 +1293,7 @@ function createDefaultKeywords() {
     'row-span-2': 'grid-row: span 2 / span 2',
     'row-span-3': 'grid-row: span 3 / span 3',
     'row-span-full': 'grid-row: 1 / -1',
-    
+
     // Grid positioning
     'col-start-1': 'grid-column-start: 1',
     'col-start-2': 'grid-column-start: 2',
@@ -1359,14 +1363,14 @@ function createDefaultKeywords() {
     'leading-normal': 'line-height: 1.5',
     'leading-relaxed': 'line-height: 1.625',
     'leading-loose': 'line-height: 2',
-    
+
     // List Style Image
     'list-image-none': 'list-style-image: none',
-    
+
     // List Style Position
     'list-inside': 'list-style-position: inside',
     'list-outside': 'list-style-position: outside',
-    
+
     // List Style Type
     'list-none': 'list-style-type: none',
     'list-disc': 'list-style-type: disc',
@@ -1382,7 +1386,7 @@ function createDefaultKeywords() {
     // Appearance
     'appearance-none': 'appearance: none',
     'appearance-auto': 'appearance: auto',
-    
+
     // Columns
     'columns-1': 'columns: 1',
     'columns-2': 'columns: 2',
@@ -1410,7 +1414,7 @@ function createDefaultKeywords() {
     'columns-5xl': 'columns: 64rem',
     'columns-6xl': 'columns: 72rem',
     'columns-7xl': 'columns: 80rem',
-    
+
     // Break Before
     'break-before-auto': 'break-before: auto',
     'break-before-avoid': 'break-before: avoid',
@@ -1420,13 +1424,13 @@ function createDefaultKeywords() {
     'break-before-left': 'break-before: left',
     'break-before-right': 'break-before: right',
     'break-before-column': 'break-before: column',
-    
+
     // Break Inside
     'break-inside-auto': 'break-inside: auto',
     'break-inside-avoid': 'break-inside: avoid',
     'break-inside-avoid-page': 'break-inside: avoid-page',
     'break-inside-avoid-column': 'break-inside: avoid-column',
-    
+
     // Break After
     'break-after-auto': 'break-after: auto',
     'break-after-avoid': 'break-after: avoid',
@@ -1436,15 +1440,15 @@ function createDefaultKeywords() {
     'break-after-left': 'break-after: left',
     'break-after-right': 'break-after: right',
     'break-after-column': 'break-after: column',
-    
+
     // Box Decoration Break
     'box-decoration-clone': 'box-decoration-break: clone',
     'box-decoration-slice': 'box-decoration-break: slice',
-    
+
     // Box Sizing (duplicate)
     'box-border': 'box-sizing: border-box',
     'box-content': 'box-sizing: content-box',
-    
+
     // Width
     'w-0': 'width: 0px',
     'w-px': 'width: 1px',
@@ -1516,7 +1520,7 @@ function createDefaultKeywords() {
     'w-min': 'width: min-content',
     'w-max': 'width: max-content',
     'w-fit': 'width: fit-content',
-    
+
     // Min-Width
     'min-w-0': 'min-width: 0px',
     'min-w-1': 'min-width: 0.25rem',
@@ -1557,7 +1561,7 @@ function createDefaultKeywords() {
     'min-w-min': 'min-width: min-content',
     'min-w-max': 'min-width: max-content',
     'min-w-fit': 'min-width: fit-content',
-    
+
     // Max-Width
     'max-w-0': 'max-width: 0rem',
     'max-w-none': 'max-width: none',
@@ -1582,7 +1586,7 @@ function createDefaultKeywords() {
     'max-w-screen-lg': 'max-width: 1024px',
     'max-w-screen-xl': 'max-width: 1280px',
     'max-w-screen-2xl': 'max-width: 1536px',
-    
+
     // Height
     'h-0': 'height: 0px',
     'h-px': 'height: 1px',
@@ -1643,7 +1647,7 @@ function createDefaultKeywords() {
     'h-min': 'height: min-content',
     'h-max': 'height: max-content',
     'h-fit': 'height: fit-content',
-    
+
     // Min-Height
     'min-h-0': 'min-height: 0px',
     'min-h-1': 'min-height: 0.25rem',
@@ -1688,7 +1692,7 @@ function createDefaultKeywords() {
     'min-h-min': 'min-height: min-content',
     'min-h-max': 'min-height: max-content',
     'min-h-fit': 'min-height: fit-content',
-    
+
     // Max-Height
     'max-h-0': 'max-height: 0px',
     'max-h-px': 'max-height: 1px',
@@ -1747,21 +1751,21 @@ function createDefaultKeywords() {
     'resize-y': 'resize: vertical',
     'resize-x': 'resize: horizontal',
     'resize': 'resize: both',
-    
+
     // Scroll Behavior
     'scroll-auto': 'scroll-behavior: auto',
     'scroll-smooth': 'scroll-behavior: smooth',
-    
+
     // Scroll Snap Align
     'snap-start': 'scroll-snap-align: start',
     'snap-end': 'scroll-snap-align: end',
     'snap-center': 'scroll-snap-align: center',
     'snap-align-none': 'scroll-snap-align: none',
-    
+
     // Scroll Snap Stop
     'snap-normal': 'scroll-snap-stop: normal',
     'snap-always': 'scroll-snap-stop: always',
-    
+
     // Scroll Snap Type
     'snap-none': 'scroll-snap-type: none',
     'snap-x': 'scroll-snap-type: x var(--tw-scroll-snap-strictness)',
@@ -1769,7 +1773,7 @@ function createDefaultKeywords() {
     'snap-both': 'scroll-snap-type: both var(--tw-scroll-snap-strictness)',
     'snap-mandatory': '--tw-scroll-snap-strictness: mandatory',
     'snap-proximity': '--tw-scroll-snap-strictness: proximity',
-    
+
     // Touch Action
     'touch-auto': 'touch-action: auto',
     'touch-none': 'touch-action: none',
@@ -1781,24 +1785,24 @@ function createDefaultKeywords() {
     'touch-pan-down': 'touch-action: pan-down',
     'touch-pinch-zoom': 'touch-action: pinch-zoom',
     'touch-manipulation': 'touch-action: manipulation',
-    
+
     // Will Change
     'will-change-auto': 'will-change: auto',
     'will-change-scroll': 'will-change: scroll-position',
     'will-change-contents': 'will-change: contents',
     'will-change-transform': 'will-change: transform',
-    
+
     // Screen Readers
     'sr-only': 'position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0',
     'not-sr-only': 'position: static; width: auto; height: auto; padding: 0; margin: 0; overflow: visible; clip: auto; white-space: normal',
-    
+
     // Forced Color Adjust
     'forced-color-adjust-auto': 'forced-color-adjust: auto',
     'forced-color-adjust-none': 'forced-color-adjust: none',
-    
+
     // Container
     'container': 'width: 100%',
-    
+
     // Custom
     'box': 'border: 2px solid #aaa'
   };
@@ -1814,17 +1818,17 @@ export const CONFIG = {
 
 /**
  * Validate configuration object
- * @param {object} config 
+ * @param {object} config
  * @returns {object} Validation result
  */
 export function validateConfig(config) {
   const errors = [];
-  
+
   if (!config) {
     errors.push('Config object is required');
     return { valid: false, errors };
   }
-  
+
   // Validate breakpoints
   if (config.breakpoints) {
     Object.entries(config.breakpoints).forEach(([key, value]) => {
@@ -1836,14 +1840,14 @@ export function validateConfig(config) {
       }
     });
   }
-  
+
   // Validate pixelMultiplier
   if (config.pixelMultiplier !== undefined) {
     if (typeof config.pixelMultiplier !== 'number' || config.pixelMultiplier <= 0) {
       errors.push('pixelMultiplier must be a positive number');
     }
   }
-  
+
   return {
     valid: errors.length === 0,
     errors
@@ -1858,12 +1862,12 @@ export function createDefaultConfig() {
     keywords: createDefaultKeywords(),
     shortcuts: {}
   };
-  
+
   // Validate the default configuration
   const validation = validateConfig(config);
   if (!validation.valid) {
     console.warn('DuxWind: Default configuration validation errors:', validation.errors);
   }
-  
+
   return config;
 }
