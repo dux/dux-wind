@@ -342,10 +342,16 @@ function applyBreakpointOverrides(breakpointMap) {
     return;
   }
 
-  CONFIG.breakpoints = {
-    ...CONFIG.breakpoints,
-    ...normalized
-  };
+  const existing = CONFIG.breakpoints || {};
+  const orderedEntries = [...Object.entries(normalized)];
+
+  Object.entries(existing).forEach(([key, value]) => {
+    if (!Object.prototype.hasOwnProperty.call(normalized, key)) {
+      orderedEntries.push([key, value]);
+    }
+  });
+
+  CONFIG.breakpoints = Object.fromEntries(orderedEntries);
 }
 
 function isPlainObject(value) {

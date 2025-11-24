@@ -680,8 +680,18 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
         'd': '(min-width: 1025px)'
       });
 
-      // Test: p-10:20 should convert to p-10|20 and expand to responsive classes
-      // Expected: m:p-10 and d:p-20
+      // Test: p-10:20 should convert to p-10|20 and expand to responsive classes using the user-defined order (m, d)
+      const colonOutput = testClassWithOutput('p-10:20', [
+        '@media (max-width: 768px)',
+        'padding: 40px',
+        '@media (min-width: 1025px)',
+        'padding: 80px'
+      ]);
+      expect(colonOutput.success).toBe(true);
+      expect(Object.keys(DuxWind.config.breakpoints).slice(0, 2)).toEqual(['m', 'd']);
+      expect(colonOutput.css).not.toContain('(min-width: 769px) and (max-width: 1024px)');
+
+      // Direct responsive classes still generate the expected CSS
       testClassWithOutput('m:p-10', ['@media (max-width: 768px)', 'padding: 40px']);
       testClassWithOutput('d:p-20', ['@media (min-width: 1025px)', 'padding: 80px']);
 
