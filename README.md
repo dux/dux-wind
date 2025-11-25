@@ -36,6 +36,7 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 - **🌊 Pipe notation** - Compact responsive syntax (`p-10|20` or `p-10:20`) that maps to your breakpoint order
 - **@ Alternative syntax** - Property-first breakpoint notation (`text-lg@m text-xl@d` insted of `m:text-lg`)
 - **👁️ Scroll animations** - Built-in `visible:` pseudo-class for viewport-triggered effects without extra JS
+- **‼️ Priority modifiers** - Append `!` for `!important` or `!!` for scoped `html body` specificity boosts on any utility
 - **📦 Inline container queries** - `min-`/`max-` classes toggle utilities by element width (per-node ResizeObserver for precise control)
 
 ## Quick Start
@@ -223,6 +224,20 @@ DuxWind supports multiple syntaxes for responsive design:
     Padding: 16px mobile, 32px desktop
 </div>
 ```
+
+### Importance Suffixes (`!` / `!!`)
+
+Need to bump priority without hunting for CSS overrides? Append `!` or `!!` directly to any recognized utility:
+
+```html
+<div class="m-4!">Force margin with !important</div>
+<div class="d:w-40px!!">Desktop width with extra specificity</div>
+<div class="w-40px|50px!">Pipe notation + !important per breakpoint</div>
+```
+
+- `!` adds `!important` to the generated declaration(s) (even for multi-property utilities like `px-4`).
+- `!!` wraps the selector with `html body` for a specificity bump without resorting to `!important`.
+- Works with responsive prefixes (`m:`, `d:`), pseudo-states (`hover:`, `focus:`), shortcuts, and container queries because the suffix is preserved through every expansion.
 
 ### Inline Container Queries (`min-XXX` / `max-XXX`)
 
