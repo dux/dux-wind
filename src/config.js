@@ -1854,12 +1854,6 @@ function createDefaultKeywords() {
     // Forced Color Adjust
     'forced-color-adjust-auto': 'forced-color-adjust: auto',
     'forced-color-adjust-none': 'forced-color-adjust: none',
-
-    // Container
-    'container': 'width: 100%',
-
-    // Custom
-    'box': 'border: 2px solid #aaa'
   };
 
   Object.assign(keywords, createBorderRadiusKeywordMap());

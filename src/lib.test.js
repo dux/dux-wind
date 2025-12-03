@@ -164,6 +164,34 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       expect(DuxWind.config.breakpoints.d).toBe('(min-width: 641px)');
     });
 
+    test('init accepts inline define option', () => {
+      const shortcutName = 'btn-init';
+
+      DuxWind.init({
+        debug: false,
+        clearCache: true,
+        define: {
+          [shortcutName]: 'px-3 py-2 rounded bg-blue-500 text-white'
+        }
+      });
+
+      expect(DuxWind.config.shortcuts[shortcutName]).toBe('px-3 py-2 rounded bg-blue-500 text-white');
+    });
+
+    test('init preloads classes before DOM scan', () => {
+      resetCapturedCSS();
+      const cssBefore = getCapturedCSS().length;
+
+      DuxWind.init({
+        debug: false,
+        clearCache: true,
+        preload: 'text-red-500'
+      });
+
+      const cssAfter = getCapturedCSS().length;
+      expect(cssAfter).toBeGreaterThan(cssBefore);
+    });
+
     test('registering shortcuts via object helper', () => {
       const success = DuxWind.shortcut({
         'btn': 'px-2 py-1 rounded',

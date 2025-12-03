@@ -75,15 +75,21 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
                 'm': '(max-width: 768px)',    // Mobile
                 't': '(max-width: 1024px)',   // Tablet
                 'd': '(min-width: 1025px)'    // Desktop
-            }
-        });
+            },
 
-        // Optional: Define custom utilities or shortcuts without touching config
-        DuxWind.define({
+            // Optional: Define custom utilities or shortcuts right inside init
+            define: {
             'text-brand': 'color: #2563eb; font-weight: 600',
             'btn': 'px-4 py-2 rounded font-medium cursor-pointer',
             'btn-primary': 'btn bg-blue-500 text-white hover:bg-blue-600', // reuse defined btn
             'card': 'bg-white rounded border p-6 shadow-sm'
+            },
+
+            // Optional: Preload frequently used classes so their CSS exists before first render
+            preload: `
+                btn btn-primary card
+                p-4 bg-blue-500 text-white rounded
+            `
         });
     </script>
 </head>
@@ -136,6 +142,11 @@ DuxWind.resetCss();
 DuxWind.loadDefaultConfig();
 ```
 
+`DuxWind.init` also accepts inline helpers:
+
+- `define`: object map, array of maps, or `[name, style]` tuples passed straight to `DuxWind.define`
+- `preload`: string or array of whitespace-delimited class lists processed immediately (same as calling `DuxWind.preload` manually)
+
 **What's Auto-Loaded:**
 - **100+ CSS Properties:** `p-4` (padding), `m-8` (margin), `w-full` (width), `text-lg` (font-size), `bg-blue-500` (background), etc.
 - **200+ Keyword Classes:** `flex`, `grid`, `rounded`, `shadow-lg`, `animate-spin`, `transition`, `cursor-pointer`, etc.
@@ -143,6 +154,25 @@ DuxWind.loadDefaultConfig();
 - **All Pseudo-classes:** `hover:`, `focus:`, `active:`, `first:`, `last:`, `even:`, `odd:`, `disabled:`, `visible:`, etc.
 - **Animations & Transitions:** `animate-spin`, `animate-pulse`, `duration-300`, `ease-in-out`
 - **Layout Systems:** Flexbox, CSS Grid, positioning, spacing utilities
+
+### Preloading Classes
+
+Need key utilities available before the first DOM mutation? Call `DuxWind.preload()` with a whitespace-delimited string (or array of strings) to expand every class and inject its CSS immediately:
+
+```javascript
+DuxWind.preload(`
+    btn btn-primary card
+    p-4 bg-blue-500 text-white rounded hover:bg-blue-600
+`);
+```
+
+- Runs entirely in JS—no elements required in the document yet
+- Uses the same parser as runtime processing, so responsive prefixes, `@` notation, pipe syntax, shortcuts, and container queries all work
+- Safe to invoke multiple times; already-processed classes are skipped via caching
+
+Pair it with `DuxWind.define()` to warm up custom shortcuts before they ever appear in the DOM.
+
+Prefer to keep everything in one place? Pass the same string via `DuxWind.init({ preload: '...' })` and combine with `define` to register and warm shortcuts in a single call.
 
 ### Custom Breakpoints
 

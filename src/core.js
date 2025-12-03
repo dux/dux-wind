@@ -286,6 +286,14 @@ export function init(options = {}) {
     resetCSS();
   }
 
+  if (settings.define) {
+    applyInitDefinitions(settings.define);
+  }
+
+  if (settings.preload) {
+    preload(settings.preload);
+  }
+
   const elementsWithClasses = document.querySelectorAll('[class]');
   elementsWithClasses.forEach(processElement);
 
@@ -429,6 +437,47 @@ details summary{cursor:pointer}
 
 export function loadClass(className) {
   processClassForCSS(className);
+}
+
+export function preload(classList) {
+  if (!classList) return;
+
+  const normalizedEntries = Array.isArray(classList)
+    ? classList
+    : [classList];
+
+  normalizedEntries
+    .filter(entry => typeof entry === 'string' && entry.trim())
+    .flatMap(entry => expandClassString(entry).split(/\s+/))
+    .filter(Boolean)
+    .forEach(cls => processClassForCSS(cls));
+}
+
+function applyInitDefinitions(definitionOption) {
+  if (!definitionOption) return;
+
+  const entries = Array.isArray(definitionOption) ? definitionOption : [definitionOption];
+
+  entries.forEach(entry => {
+    if (!entry) return;
+
+    if (Array.isArray(entry)) {
+      const [name, style] = entry;
+      if (!name) {
+        console.warn('DuxWind: init.define entry missing name.');
+        return;
+      }
+      defineKeyword(name, style);
+      return;
+    }
+
+    if (typeof entry === 'object') {
+      defineKeyword(entry);
+      return;
+    }
+
+    console.warn('DuxWind: init.define entries must be objects or [name, style] pairs.');
+  });
 }
 
 function getProcessableShortcutName(shortcutName) {

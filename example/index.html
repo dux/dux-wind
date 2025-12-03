@@ -15,31 +15,34 @@
             breakpoints: {
                 'm': '(max-width: 800px)',  // Mobile: phones and small tablets
                 'd': '(min-width: 801px)'   // Desktop and large screens
-            }
-        });
-
-        // 🛠️ Optional: Define custom utilities or shortcuts inline
-        DuxWind.define({
-            'btn': 'px-4 py-2 rounded font-medium cursor-pointer border border-transparent transition-colors duration-200 shadow-sm shadow-black/5',
-            'btn-primary': 'btn bg-blue-600 text-white border-blue-600 hover:bg-blue-500 hover:border-blue-500 active:bg-blue-700 focus:ring-4 focus:ring-blue-200',
-            'btn-outline': 'btn bg-white text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-400 active:bg-blue-100 focus:ring-4 focus:ring-blue-100',
-            'btn-ghost': 'btn bg-transparent text-gray-700 border-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200',
-            'btn-success': 'btn bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-400 hover:border-emerald-400 active:bg-emerald-600 focus:ring-4 focus:ring-emerald-200',
-            'btn-danger': 'btn bg-rose-500 text-white border-rose-500 hover:bg-rose-400 hover:border-rose-400 active:bg-rose-600 focus:ring-4 focus:ring-rose-200',
-            'btn-soft': 'btn bg-blue-50 text-blue-700 border-blue-100 hover:bg-blue-100 focus:ring-4 focus:ring-blue-100',
-            'badge': 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-widest',
-            'badge-success': 'badge bg-emerald-100 text-emerald-700',
-            'badge-warning': 'badge bg-amber-100 text-amber-700',
-            'chip': 'inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm font-medium border border-transparent',
-            'chip-check': 'chip bg-blue-50 text-blue-700 border-blue-200',
-            'card': 'bg-white rounded-2xl border border-gray-200 p-6 shadow-md shadow-gray-200/80 space-y-4',
-            'center': 'flex items-center justify-center',
-            'full-center': 'w-full h-full center',
-            'container': 'max-w-[1200px] mx-auto px-4',
-            'section': 'mb-12 p-6 bg-white rounded-3xl border border-gray-200 shadow-sm shadow-gray-200/50 space-y-6',
-            'text-glow': 'color: #0ea5e9; text-shadow: 0 0 20px rgba(14,165,233,0.6)',
-            'h1': 'font-bold m:text-24px d:text-36px leading-tight',
-            'h2': 'font-semibold m:text-20px d:text-24px leading-tight',
+            },
+            define: {
+                'btn': 'px-4 py-2 rounded font-medium cursor-pointer border border-transparent transition-colors duration-200 shadow-sm shadow-black/5',
+                'btn-primary': 'btn bg-blue-600 text-white border-blue-600 hover:bg-blue-500 hover:border-blue-500 active:bg-blue-700 focus:ring-4 focus:ring-blue-200',
+                'btn-outline': 'btn bg-white text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-400 active:bg-blue-100 focus:ring-4 focus:ring-blue-100',
+                'btn-ghost': 'btn bg-transparent text-gray-700 border-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200',
+                'btn-success': 'btn bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-400 hover:border-emerald-400 active:bg-emerald-600 focus:ring-4 focus:ring-emerald-200',
+                'btn-danger': 'btn bg-rose-500 text-white border-rose-500 hover:bg-rose-400 hover:border-rose-400 active:bg-rose-600 focus:ring-4 focus:ring-rose-200',
+                'btn-soft': 'btn bg-blue-50 text-blue-700 border-blue-100 hover:bg-blue-100 focus:ring-4 focus:ring-blue-100',
+                'badge': 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-widest',
+                'badge-success': 'badge bg-emerald-100 text-emerald-700',
+                'badge-warning': 'badge bg-amber-100 text-amber-700',
+                'chip': 'inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm font-medium border border-transparent',
+                'chip-check': 'chip bg-blue-50 text-blue-700 border-blue-200',
+                'card': 'bg-white rounded-2xl border border-gray-200 p-6 shadow-md shadow-gray-200/80 space-y-4',
+                'center': 'flex items-center justify-center',
+                'full-center': 'w-full h-full center',
+                'container': 'max-w-[1200px] mx-auto px-4',
+                'section': 'mb-12 p-6 bg-white rounded-3xl border border-gray-200 shadow-sm shadow-gray-200/50 space-y-6',
+                'text-glow': 'color: #0ea5e9; text-shadow: 0 0 20px rgba(14,165,233,0.6)',
+                'h1': 'font-bold m:text-24px d:text-36px leading-tight',
+                'h2': 'font-semibold m:text-20px d:text-24px leading-tight'
+            },
+            preload: `
+                btn btn-primary btn-outline btn-ghost btn-success btn-danger btn-soft
+                badge badge-success badge-warning chip chip-check card section container
+                text-glow h1 h2 center full-center flex gap-4 rounded-3xl shadow-sm
+            `
         });
 
         console.log('🎉 DuxWind ready! Auto-loaded:',
