@@ -508,8 +508,17 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       // Input: fixed    → Expected: position: fixed
       testClassWithOutput('fixed', ['position: fixed']);
 
-      // Input: top-0    → Expected: top: 0px
-      testClassWithOutput('top-0', ['top: 0px']);
+      // Input: top-0    → Expected: position: relative; top: 0px
+      testClassWithOutput('top-0', ['position: relative', 'top: 0px']);
+
+      // Input: right-4  → Expected: position: relative; right: 16px
+      testClassWithOutput('right-4', ['position: relative', 'right: 16px']);
+
+      // Input: left-[10%] → Expected: position: relative; left: 10%
+      testClassWithOutput('left-[10%]', ['position: relative', 'left: 10%']);
+
+      // Input: m:bottom-2 → Expected: responsive block with position: relative and bottom: 8px
+      testClassWithOutput('m:bottom-2', ['@media (max-width: 768px)', 'position: relative', 'bottom: 8px']);
 
       // Input: z-10     → Expected: z-index: 10
       testClassWithOutput('z-10', ['z-index: 10']);

@@ -3,6 +3,16 @@ import { CONFIG, CONSTANTS } from './config.js';
 import { isShortcut, generateShortcutCSS } from './shortcuts.js';
 import { memoize, safeWrapper, escapeSelector } from './utils.js';
 
+const RELATIVE_OFFSET_PROPS = new Set(['top', 'right', 'bottom', 'left']);
+
+function getRelativePositionDeclarations(property) {
+  if (!RELATIVE_OFFSET_PROPS.has(property)) {
+    return null;
+  }
+
+  return [{ property: 'position', value: 'relative' }];
+}
+
 /**
  * Main styler function that takes a class attribute string and returns CSS rules
  * @param {string} classAttribute - Full class attribute like "p-10|20 bg-blue-500 hover:text-white"
@@ -309,7 +319,8 @@ function tryParseNumeric(actualClass, className, modifiers, breakpoint, importan
     const cssProperty = CONFIG.props[property];
 
     if (!cssProperty) return null;
-    return buildCSSRule(className, cssProperty, cssValue, modifiers, breakpoint, importanceLevel);
+    const extraDeclarations = getRelativePositionDeclarations(property);
+    return buildCSSRule(className, cssProperty, cssValue, modifiers, breakpoint, importanceLevel, extraDeclarations);
   }
 
   // Try regular numeric values
@@ -321,6 +332,7 @@ function tryParseNumeric(actualClass, className, modifiers, breakpoint, importan
   const cssProperty = CONFIG.props[property];
 
   if (!cssProperty) return null;
+  const extraDeclarations = getRelativePositionDeclarations(property);
 
   // Special handling for transform functions with numeric values
   if (cssProperty === 'transform') {
@@ -354,7 +366,7 @@ function tryParseNumeric(actualClass, className, modifiers, breakpoint, importan
     }
   }
 
-  return buildCSSRule(className, cssProperty, cssValue, modifiers, breakpoint, importanceLevel);
+  return buildCSSRule(className, cssProperty, cssValue, modifiers, breakpoint, importanceLevel, extraDeclarations);
 }
 
 /**
@@ -373,6 +385,7 @@ function tryParseArbitrary(actualClass, className, modifiers, breakpoint, import
   const cssProperty = CONFIG.props[property];
 
   if (!cssProperty) return null;
+  const extraDeclarations = getRelativePositionDeclarations(property);
 
   // Extract value from brackets if present: [1.05] → 1.05, [#ff0000] → #ff0000
   const value = rawValue.startsWith('[') && rawValue.endsWith(']')
@@ -419,7 +432,7 @@ function tryParseArbitrary(actualClass, className, modifiers, breakpoint, import
     }
   }
 
-  return buildCSSRule(className, resolvedProperty, cssValue, modifiers, breakpoint, importanceLevel);
+  return buildCSSRule(className, resolvedProperty, cssValue, modifiers, breakpoint, importanceLevel, extraDeclarations);
 }
 
 /**
@@ -455,14 +468,14 @@ function calculateNumericValue(property, value, unit, negative) {
  * @param {string|null} breakpoint
  * @returns {string}
  */
-function buildCSSRule(className, cssProperty, cssValue, modifiers, breakpoint, importanceLevel = IMPORTANCE_LEVELS.NONE) {
+function buildCSSRule(className, cssProperty, cssValue, modifiers, breakpoint, importanceLevel = IMPORTANCE_LEVELS.NONE, extraDeclarations = null) {
   let selector = buildCSSSelector(className, modifiers);
 
   if (importanceLevel === IMPORTANCE_LEVELS.SCOPED) {
     selector = `html body ${selector}`;
   }
 
-  const rule = buildCSSDeclaration(selector, cssProperty, cssValue, importanceLevel);
+  const rule = buildCSSDeclaration(selector, cssProperty, cssValue, importanceLevel, extraDeclarations);
 
   return breakpoint
     ? `@media ${CONFIG.breakpoints[breakpoint]} { ${rule} }`
@@ -501,7 +514,7 @@ function buildCSSSelector(className, modifiers) {
  * @param {string} cssValue
  * @returns {string}
  */
-function buildCSSDeclaration(selector, cssProperty, cssValue, importanceLevel = IMPORTANCE_LEVELS.NONE) {
+function buildCSSDeclaration(selector, cssProperty, cssValue, importanceLevel = IMPORTANCE_LEVELS.NONE, extraDeclarations = null) {
   const shouldAddImportant = importanceLevel === IMPORTANCE_LEVELS.IMPORTANT;
 
   if (cssProperty === 'KEYWORD') {
@@ -515,14 +528,26 @@ function buildCSSDeclaration(selector, cssProperty, cssValue, importanceLevel = 
     ? appendImportant(cssValue)
     : cssValue;
 
+  const declarations = [];
   if (Array.isArray(cssProperty)) {
-    const declarations = cssProperty
-      .map(prop => `${prop}: ${valueWithImportance}`)
-      .join('; ');
-    return `${selector} { ${declarations}; }`;
+    cssProperty.forEach(prop => {
+      declarations.push(`${prop}: ${valueWithImportance}`);
+    });
+  } else {
+    declarations.push(`${cssProperty}: ${valueWithImportance}`);
   }
 
-  return `${selector} { ${cssProperty}: ${valueWithImportance}; }`;
+  if (Array.isArray(extraDeclarations)) {
+    extraDeclarations.forEach(({ property, value }) => {
+      if (!property || value == null) {
+        return;
+      }
+      const finalValue = shouldAddImportant ? appendImportant(value) : value;
+      declarations.push(`${property}: ${finalValue}`);
+    });
+  }
+
+  return `${selector} { ${declarations.join('; ')}; }`;
 }
 
 function appendImportant(value) {

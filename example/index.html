@@ -991,6 +991,35 @@
                         <code class="text-sm">m:bg-red-100 d:bg-blue-100</code>
                     </div>
                 </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Relative Offset Utilities</h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        `top-*`, `right-*`, `bottom-*`, and `left-*` now include <code>position: relative</code> automatically, so responsive offsets are as simple as any spacing class.
+                    </p>
+                    <div class="border border-dashed border-gray-300 rounded-xl p-4 bg-white">
+                        <div class="flex flex-wrap gap-4 items-start mb-4">
+                            <span class="px-3 py-1 rounded-full bg-violet-100 text-violet-800 text-sm">
+                                Baseline chip
+                            </span>
+                            <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-sm top-3">
+                                top-3 → down 12px
+                            </span>
+                            <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-sm right-4">
+                                right-4 → 16px from the right
+                            </span>
+                        </div>
+                        <div class="flex flex-wrap gap-3 items-start">
+                            <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-sm left-[10px]">
+                                left-[10px] → custom value
+                            </span>
+                            <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-sm m:bottom-2 d:top-0">
+                                m:bottom-2 d:top-0 → switches per breakpoint
+                            </span>
+                        </div>
+                    </div>
+                    <code class="text-sm bg-gray-100 p-2 rounded block mt-4">top-3 right-4 left-[10px] m:bottom-2 d:top-0</code>
+                </div>
             </div>
         </section>
 

@@ -336,6 +336,33 @@ Use any CSS value with bracket notation:
 <div class="top-4 left-8 z-10">
 ```
 
+#### Relative offset helpers (`top-*`, `bottom-*`, `left-*`, `right-*`)
+
+Directional offset utilities now auto-inject `position: relative` so you only write the offset you care about (and they inherit responsive prefixes or pipe notation like any other class).
+
+```html
+<div class="flex flex-wrap gap-4 items-start">
+    <span class="px-3 py-1 rounded bg-indigo-100 text-indigo-800 top-3">
+        top-3 → position: relative; top: 12px;
+    </span>
+    <span class="px-3 py-1 rounded bg-rose-100 text-rose-800 right-4">
+        right-4 → position: relative; right: 16px;
+    </span>
+    <span class="px-3 py-1 rounded bg-emerald-100 text-emerald-800 left-[10px]">
+        left-[10px] → position: relative; left: 10px;
+    </span>
+</div>
+<div class="mt-4 p-3 bg-gray-50 border rounded">
+    <code class="block text-sm">
+        m:bottom-2 d:top-0
+        top-3px bottom-1/2 left-[2rem]
+    </code>
+    <p class="text-xs text-gray-600 mt-2">
+        Responsive prefixes (`m:`/`d:`), fractional/pipe values, and bracket syntax all work—each generated rule includes the offset plus `position: relative`.
+    </p>
+</div>
+```
+
 ### Typography
 ```html
 <!-- Font -->
