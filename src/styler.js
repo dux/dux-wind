@@ -81,10 +81,10 @@ export function expandClass(className) {
   let cleanClass = cleanClassName(baseClassName);
 
   // Step 2: Handle @ notation: p-10@m → m:p-10
-  cleanClass = handleAtNotation(cleanClass);
+  cleanClass = cleanClass.replace(/^([^@]+)@([a-z]+)$/, '$2:$1');
 
   // Step 3: Pre-filter colon notation to pipe notation: p-10:20 → p-10|20
-  cleanClass = normalizeColonToPipe(cleanClass);
+  cleanClass = cleanClass.replace(/^([a-z-]+-\d+)(:\d+)+$/g, (match) => match.replace(/:/g, '|'));
 
   // Step 4: Expand pipe notation: p-10|20 → [m:p-10, d:p-20]
   if (cleanClass.includes('|')) {
@@ -141,26 +141,7 @@ function cleanClassName(className) {
   return className.replace(/^([^-]+)-(\d+px)$/, '$1-[$2]');
 }
 
-/**
- * Handle @ notation: p-10@m → m:p-10
- * @param {string} className
- * @returns {string}
- */
-function handleAtNotation(className) {
-  return className.replace(/^([^@]+)@([a-z]+)$/, '$2:$1');
-}
 
-/**
- * Normalize colon notation to pipe notation for numeric patterns
- * @param {string} className
- * @returns {string}
- */
-function normalizeColonToPipe(className) {
-  // Convert p-10:20 → p-10|20 (but preserve hover:, focus:, etc.)
-  return className.replace(/^([a-z-]+-\d+)(:\d+)+$/g, (match) => {
-    return match.replace(/:/g, '|');
-  });
-}
 
 /**
  * Extract modifier prefix from class name

@@ -71,27 +71,25 @@ export function expandShortcut(shortcutName) {
     return [shortcutName]; // Not a shortcut, return as is
   }
 
-  const shortcutClasses = getShortcut(shortcutName).split(/\s+/).filter(Boolean);
   const expandedClasses = [];
   const seenClasses = new Set();
+  const queue = getShortcut(shortcutName).split(/\s+/).filter(Boolean);
 
-  function expandClasses(classes) {
-    classes.forEach(className => {
-      if (isShortcut(className)) {
-        // Nested shortcut - expand it recursively
-        const nestedClasses = getShortcut(className).split(/\s+/).filter(Boolean);
-        expandClasses(nestedClasses);
-      } else {
-        // Regular class - add to expanded list if not already present
-        if (!seenClasses.has(className)) {
-          seenClasses.add(className);
-          expandedClasses.push(className);
-        }
+  while (queue.length > 0) {
+    const className = queue.shift();
+    if (isShortcut(className)) {
+      // Nested shortcut - expand it recursively (depth-first order)
+      const nestedClasses = getShortcut(className).split(/\s+/).filter(Boolean);
+      queue.unshift(...nestedClasses);
+    } else {
+      // Regular class - add to expanded list if not already present
+      if (!seenClasses.has(className)) {
+        seenClasses.add(className);
+        expandedClasses.push(className);
       }
-    });
+    }
   }
 
-  expandClasses(shortcutClasses);
   return expandedClasses;
 }
 

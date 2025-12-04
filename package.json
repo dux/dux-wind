@@ -1,6 +1,6 @@
 {
   "name": "postwind",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Real-time Tailwind-like CSS generator with pipe notation, shortcuts, and dynamic CSS injection",
   "type": "module",
   "main": "dist/lib.js",
@@ -31,7 +31,7 @@
     "pages": "open https://dux.github.io/postwind/",
     "open": "open https://www.npmjs.com/package/postwind",
     "gh": "open https://github.com/dux/postwind",
-    "publish": "bun run build && bun run test && npm publish",
+    "publish": "bun run build && bun run test && npm publish && exit",
     "ai-bridge": "bun run bin/ai-bridge.js"
   },
   "keywords": [

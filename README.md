@@ -1090,6 +1090,34 @@ PostWind.init({ body: true });
 </div>
 ```
 
+**9. `scroll-x` Marquee System**
+```html
+<!-- Infinite scrolling marquee in 20 seconds -->
+<div class="scroll-x:20 flex gap-4">
+  <div class="card">Item 1</div>
+  <div class="card">Item 2</div>
+  <!-- Automatically clones children and animates -->
+</div>
+```
+
+**10. Relative Offset Helpers**
+```html
+<!-- Auto-injects position: relative -->
+<div class="top-4 left-4">
+  <!-- No need to add 'relative' class manually -->
+  I'm nudged 16px from top-left!
+</div>
+```
+
+**11. Inline Container Queries**
+```html
+<!-- Element-based responsive styles -->
+<div class="min-400:flex max-400:hidden">
+  <!-- Shows flex layout when THIS element is >400px wide -->
+  <!-- Uses ResizeObserver automatically -->
+</div>
+```
+
 ## Browser Support
 
 PostWind works in all modern browsers that support:
